@@ -13,6 +13,15 @@ import {
 } from "lucide-react";
 import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import { SiDatacamp } from "react-icons/si";
+import {
+  ResponsiveContainer,
+  LineChart as ReLineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
 
 const metrics = [
   { label: "Data Sources", value: "12+" },
@@ -29,6 +38,17 @@ const stack = [
   "Plotly",
   "Docker",
   "GitHub Actions",
+];
+
+const chartData = [
+  { month: "Jan", value: 62 },
+  { month: "Feb", value: 68 },
+  { month: "Mar", value: 74 },
+  { month: "Apr", value: 71 },
+  { month: "May", value: 83 },
+  { month: "Jun", value: 91 },
+  { month: "Jul", value: 88 },
+  { month: "Aug", value: 96 },
 ];
 
 const features = [
@@ -108,8 +128,8 @@ function AnimatedGrid() {
         }}
         className="absolute right-20 top-32 h-40 w-40 rounded-full bg-cyan-100 blur-2xl"
       />
-      {/* Bottom Fade */}
-        <div className="absolute bottom-0 left-0 h-48 w-full bg-gradient-to-b from-transparent to-slate-50" />
+
+      <div className="absolute bottom-0 left-0 h-56 w-full bg-gradient-to-b from-transparent to-white" />
     </div>
   );
 }
@@ -166,7 +186,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
-      {/* HERO */}
       <section className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10 lg:px-16">
         <AnimatedGrid />
 
@@ -250,7 +269,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ABOUT ME */}
       <section id="about" className="bg-white px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-[0.8fr_1.2fr] md:items-center">
           <div className="relative">
@@ -315,7 +333,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROJECT */}
       <section id="project" className="px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -355,7 +372,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ARCHITECTURE */}
       <section
         id="architecture"
         className="relative overflow-hidden bg-slate-950 px-6 py-28 text-white md:px-10 lg:px-16"
@@ -410,7 +426,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* DASHBOARD */}
       <section id="dashboard" className="px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -437,25 +452,58 @@ export default function Home() {
               <span className="h-3 w-3 rounded-full bg-slate-300" />
             </div>
 
-            <div className="grid min-h-[440px] place-items-center rounded-b-[1.5rem] bg-slate-50 p-8 text-center">
-              <div>
-                <BarChart3 className="mx-auto mb-6 h-12 w-12 text-slate-400" />
+            <div className="rounded-b-[1.5rem] bg-slate-50 p-8">
+              <div className="mb-10 flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">
+                    Swiss Economic Activity Index
+                  </p>
 
-                <h3 className="text-2xl font-semibold tracking-tight">
-                  Dashboard Placeholder
-                </h3>
+                  <h3 className="mt-2 text-3xl font-semibold tracking-tight">
+                    +18.4%
+                  </h3>
+                </div>
 
-                <p className="mx-auto mt-3 max-w-md leading-7 text-slate-600">
-                  Embed your Streamlit app here, or replace this section with
-                  native React charts connected to your API.
-                </p>
+                <div className="rounded-2xl bg-slate-950 px-4 py-2 text-sm font-medium text-white">
+                  Updated Daily
+                </div>
+              </div>
+
+              <div className="h-[360px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ReLineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fill: "#64748b" }}
+                    />
+
+                    <YAxis
+                      tickLine={false}
+                      axisLine={false}
+                      tick={{ fill: "#64748b" }}
+                    />
+
+                    <Tooltip />
+
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#0f172a"
+                      strokeWidth={3}
+                      dot={false}
+                    />
+                  </ReLineChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TECH STACK */}
       <section className="px-6 pb-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl rounded-[2rem] border border-slate-200 bg-white p-8 md:p-12">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
@@ -483,7 +531,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer
         id="contact"
         className="border-t border-slate-200 px-6 py-10 md:px-10 lg:px-16"
