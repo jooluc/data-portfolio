@@ -66,7 +66,7 @@ const features = [
   {
     icon: Server,
     title: "Production Mindset",
-    text: "UBuilding projects with a focus on clean structure, reproducibility and modern web technologies using React and Next.js.",
+    text: "Building projects with a focus on clean structure, reproducibility and modern web technologies using React and Next.js.",
   },
 ];
 
