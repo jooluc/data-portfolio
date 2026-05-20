@@ -1,5 +1,6 @@
 "use client";
 
+import HalftoneBackground from "@/components/HalftoneBackground";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
@@ -187,7 +188,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <section className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10 lg:px-16">
-        <AnimatedGrid />
+        <HalftoneBackground />
 
         <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/70 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
           <div className="flex items-center gap-3">
