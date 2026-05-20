@@ -55,17 +55,17 @@ const features = [
   {
     icon: Database,
     title: "Data Engineering",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer data pipelines process structured and semi-structured sources.",
+    text: "Working with structured data, SQL transformations and small data pipelines to prepare information for analysis and visualization.",
   },
   {
     icon: LineChart,
     title: "Analytics & Forecasting",
-    text: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Models transform raw data into decision-ready insights.",
+    text: "Exploring trends, KPIs and interactive visualizations to better understand data and communicate insights in a simple way.",
   },
   {
     icon: Server,
     title: "Production Mindset",
-    text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Clear architecture, reproducible workflows, clean deployment.",
+    text: "UBuilding projects with a focus on clean structure, reproducibility and modern web technologies using React and Next.js.",
   },
 ];
 
