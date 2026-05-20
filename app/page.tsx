@@ -1,6 +1,7 @@
 "use client";
 
 import HalftoneBackground from "@/components/HalftoneBackground";
+import GraubuendenMap from "../components/GraubuendenMap";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
@@ -485,6 +486,9 @@ export default function Home() {
                   </ReLineChart>
                 </ResponsiveContainer>
               </div>
+              <div className="mt-8">
+  <GraubuendenMap />
+</div>
             </div>
           </div>
         </div>
