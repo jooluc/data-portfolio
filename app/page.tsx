@@ -194,7 +194,7 @@ export default function Home() {
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-white">
               <GitBranch className="h-4 w-4" />
             </div>
-            <span className="font-semibold tracking-tight">Luke Joos</span>
+            <span className="font-semibold tracking-tight">Luca Joos</span>
           </div>
 
           <div className="hidden items-center gap-8 text-sm text-slate-600 md:flex">
@@ -221,13 +221,11 @@ export default function Home() {
             </div>
 
             <h1 className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight text-slate-950 md:text-7xl">
-              Turning data into clear, decision-ready insights.
+              Building practical data solutions with modern web technologies.
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. A clean
-              data portfolio combining automated pipelines, analytical SQL
-              models and interactive visual storytelling.
+              This portfolio showcases personal projects in Python, SQL and data visualization. My goal is to explore how data can be transformed into understandable insights and interactive applications.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -274,7 +272,7 @@ export default function Home() {
           <div className="relative">
             <img
               src="/images/profile.jpg"
-              alt="Portrait of Luke"
+              alt="Portrait of Luca"
               className="aspect-[4/5] w-full rounded-[2.5rem] object-cover object-top shadow-xl shadow-slate-200"
             />
           </div>
@@ -285,28 +283,20 @@ export default function Home() {
             </p>
 
             <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-              Hi, I&apos;m Luke — passionate about data, analytics and modern
-              data products.
+              Hi, I&apos;m Luca — interested in data analytics, visualization and modern data-driven applications.
             </h2>
 
             <div className="mt-8 space-y-6 text-lg leading-8 text-slate-600">
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. I enjoy
-                transforming raw data into clear, visually engaging and
-                decision-ready insights.
+                I enjoy working with data and turning complex information into clear and visually understandable insights. My interests range from SQL and Python to dashboards and interactive web applications.
               </p>
 
               <p>
-                My interests lie at the intersection of Python, SQL, data
-                engineering and interactive analytics. I enjoy building modern
-                web-based data applications with a clean and scalable
-                architecture.
+                I am especially interested in data analytics, business intelligence and the technical side of data workflows. Through personal projects, I continuously improve my skills in data modeling, visualization and modern web technologies.
               </p>
 
               <p>
-                This portfolio serves as a playground for data visualization,
-                automated pipelines, analytical workflows and modern frontend
-                technologies.
+                This website serves as a portfolio and learning platform where I experiment with dashboards, visualizations and data-focused web applications.
               </p>
             </div>
 
@@ -341,13 +331,11 @@ export default function Home() {
             </p>
 
             <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-              A data product with business context.
+              Projects focused on practical analytics and data visualization.
             </h2>
 
             <p className="mt-6 text-lg leading-8 text-slate-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute
-              irure dolor in reprehenderit in voluptate velit esse cillum dolore
-              eu fugiat nulla pariatur.
+              The goal of these projects is not only to work with data technically, but also to present information in a way that is intuitive, visually clean and useful for decision-making.
             </p>
           </div>
 
@@ -393,9 +381,7 @@ export default function Home() {
               </h2>
 
               <p className="mt-6 text-lg leading-8 text-slate-300">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curated
-                models, reproducible transformations and a clean visualization
-                layer.
+                A simplified data workflow combining data collection, transformation and visualization. The focus lies on creating understandable and reproducible analytics applications.
               </p>
             </div>
 
@@ -440,8 +426,7 @@ export default function Home() {
             </div>
 
             <p className="max-w-md leading-7 text-slate-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Replace
-              this panel with a Streamlit iframe or native chart components.
+              This section contains interactive visualizations and dashboard components built with React and modern charting libraries.
             </p>
           </div>
 
@@ -536,7 +521,7 @@ export default function Home() {
         className="border-t border-slate-200 px-6 py-10 md:px-10 lg:px-16"
       >
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-sm text-slate-500 md:flex-row">
-          <p>© 2026 Luke Joos — Data Portfolio</p>
+          <p>© 2026 Luca Joos — Data Portfolio</p>
 
           <div className="flex items-center gap-5 text-slate-600">
             <a
