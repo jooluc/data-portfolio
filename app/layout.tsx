@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Luka Joos | Data Portfolio",
+  title: "Luca Joos | Data Portfolio",
   description: "Portfolio focused on Python, SQL, analytics and modern data visualization",
 };
 
