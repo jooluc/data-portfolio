@@ -2,6 +2,7 @@
 
 import HalftoneBackground from "@/components/HalftoneBackground";
 import GraubuendenMap from "../components/GraubuendenMap";
+import RhbDashboard from "../components/RhbDashboard";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
@@ -414,6 +415,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* RhB Dashboard Section */}
       <section id="dashboard" className="px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -423,12 +425,12 @@ export default function Home() {
               </p>
 
               <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                Interactive analytics space.
+                RhB Punctuality Analytics.
               </h2>
             </div>
 
             <p className="max-w-md leading-7 text-slate-600">
-              This section contains interactive visualizations and dashboard components built with React and modern charting libraries.
+              A live data pipeline that fetches daily punctuality data from the Swiss open transport API, stores it in Supabase and visualizes KPIs in real time.
             </p>
           </div>
 
@@ -440,55 +442,7 @@ export default function Home() {
             </div>
 
             <div className="rounded-b-[1.5rem] bg-slate-50 p-8">
-              <div className="mb-10 flex items-start justify-between">
-                <div>
-                  <p className="text-sm text-slate-500">
-                    Swiss Economic Activity Index
-                  </p>
-
-                  <h3 className="mt-2 text-3xl font-semibold tracking-tight">
-                    +18.4%
-                  </h3>
-                </div>
-
-                <div className="rounded-2xl bg-slate-950 px-4 py-2 text-sm font-medium text-white">
-                  Updated Daily
-                </div>
-              </div>
-
-              <div className="h-[360px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ReLineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-
-                    <XAxis
-                      dataKey="month"
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fill: "#64748b" }}
-                    />
-
-                    <YAxis
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fill: "#64748b" }}
-                    />
-
-                    <Tooltip />
-
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#0f172a"
-                      strokeWidth={3}
-                      dot={false}
-                    />
-                  </ReLineChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="mt-8">
-  <GraubuendenMap />
-</div>
+              <RhbDashboard />
             </div>
           </div>
         </div>
@@ -530,7 +484,7 @@ export default function Home() {
 
           <div className="flex items-center gap-5 text-slate-600">
             <a
-              href="https://github.com/AnonymousCrux"
+              href="https://github.com/jooluc"
               target="_blank"
               className="transition hover:text-slate-950"
             >
