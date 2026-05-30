@@ -271,60 +271,61 @@ export default function Home() {
       </section>
 
       <section id="about" className="bg-white px-6 py-28 md:px-10 lg:px-16">
-        <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-[0.8fr_1.2fr] md:items-center">
-          <div className="relative">
-            <img
-              src="/images/profile.jpg"
-              alt="Portrait of Luca"
-              className="aspect-[4/5] w-full rounded-[2.5rem] object-cover object-top shadow-xl shadow-slate-200"
-            />
-          </div>
+  <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-[0.8fr_1.2fr] md:items-center">
+    <div className="relative">
+      <img
+        src="/images/profile.jpg"
+        alt="Portrait of Luca"
+        className="aspect-[4/5] w-full rounded-[2.5rem] object-cover object-top shadow-xl shadow-slate-200"
+      />
+    </div>
 
-          <div>
-            <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
-              About Me
-            </p>
+    <div>
+      <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
+        About Me
+      </p>
 
-            <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-              Hi, I&apos;m Luca — interested in data analytics, visualization and modern data-driven applications.
-            </h2>
+      <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
+        Hi, I&apos;m Luca — Applied Data Scientist with a background in criminal analytics.
+      </h2>
 
-            <div className="mt-8 space-y-6 text-lg leading-8 text-slate-600">
-              <p>
-                I enjoy working with data and turning complex information into clear and visually understandable insights. My interests range from SQL and Python to dashboards and interactive web applications.
-              </p>
+      <div className="mt-8 space-y-6 text-lg leading-8 text-slate-600">
+        <p>
+          I hold a Master&apos;s degree in Applied Data Science from the Lucerne University of Applied Sciences (HSLU) and a Bachelor&apos;s degree in Information Science from the University of Applied Sciences of the Grisons (FHGR), where I specialised in Web &amp; Usability Engineering.
+        </p>
 
-              <p>
-                I am especially interested in data analytics, business intelligence and the technical side of data workflows. Through personal projects, I continuously improve my skills in data modeling, visualization and modern web technologies.
-              </p>
+        <p>
+          Professionally, I work as a criminal analyst, where I apply data-driven methods to real-world investigative challenges. Prior to that, I worked as a cybercrime investigator — an experience that sharpened my analytical thinking and attention to detail.
+        </p>
 
-              <p>
-                This website serves as a portfolio and learning platform where I experiment with dashboards, visualizations and data-focused web applications.
-              </p>
-            </div>
+        <p>
+          Through personal projects, I explore data engineering, business intelligence and interactive visualisation — combining technical rigour with a strong focus on making data understandable and actionable.
+        </p>
+      </div>
 
-            <div className="mt-10 flex flex-wrap gap-3">
-              {[
-                "Python",
-                "SQL",
-                "PostgreSQL",
-                "Data Visualization",
-                "Analytics",
-                "ETL Pipelines",
-                "React",
-                "Next.js",
-              ].map((skill) => (
-                <span
-                  key={skill}
-                  className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="mt-10 flex flex-wrap gap-3">
+        {[
+          "Python",
+          "SQL",
+          "PostgreSQL",
+          "Data Visualization",
+          "Analytics",
+          "ETL Pipelines",
+          "Machine Learning",
+          "React",
+          "Next.js",
+        ].map((skill) => (
+          <span
+            key={skill}
+            className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
 
       <section id="project" className="px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl">
