@@ -108,7 +108,7 @@ export default function Home() {
           </motion.div>
 
           {/* Pipeline Diagram statt MiniChart */}
-          <motion.div style={{ y: mounted ? yCards : 0 }} className="relative">
+          <motion.div style={{ y: mounted ? yCards : 0 }} className="relative lg:scale-110 lg:origin-left">
               <DataWorkflowDiagram  />
           </motion.div>
         </div>
