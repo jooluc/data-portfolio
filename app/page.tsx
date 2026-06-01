@@ -2,6 +2,7 @@
 
 import HalftoneBackground from "@/components/HalftoneBackground";
 import PipelineDiagram from "../components/PipelineDiagram";
+import DataWorkflowDiagram from "../components/DataWorkflowDiagram";
 import RhbDashboard from "../components/RhbDashboard";
 import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -108,9 +109,7 @@ export default function Home() {
 
           {/* Pipeline Diagram statt MiniChart */}
           <motion.div style={{ y: mounted ? yCards : 0 }} className="relative">
-            <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xl shadow-slate-200/70 backdrop-blur">
-              <PipelineDiagram />
-            </div>
+              <DataWorkflowDiagram  />
           </motion.div>
         </div>
       </section>
