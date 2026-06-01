@@ -56,18 +56,30 @@ export default function RhbDashboard() {
   useEffect(() => {
     async function fetchData() {
       const supabase = getSupabase();
-      console.log("URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       try {
-        const { data, error } = await supabase
-          .from("rhb_istdaten")
-          .select("betriebstag, linien_text, abfahrt_verspaetung_min, puenktlich")
-          .order("betriebstag", { ascending: false })
-          .limit(50000);
+        // Alle Daten paginiert abrufen
+        let allData: RhbRow[] = [];
+        let from = 0;
+        const pageSize = 1000;
 
-        if (error) throw error;
-        if (!data || data.length === 0) throw new Error("Keine Daten gefunden.");
+        while (true) {
+          const { data, error } = await supabase
+            .from("rhb_istdaten")
+            .select("betriebstag, linien_text, abfahrt_verspaetung_min, puenktlich")
+            .order("betriebstag", { ascending: false })
+            .range(from, from + pageSize - 1);
 
-        const rows = data as RhbRow[];
+          if (error) throw error;
+          if (!data || data.length === 0) break;
+
+          allData = [...allData, ...data];
+          if (data.length < pageSize) break;
+          from += pageSize;
+        }
+
+        if (allData.length === 0) throw new Error("Keine Daten gefunden.");
+
+        const rows = allData;
 
         // Neuestes Datum
         setLatestDate(rows[0].betriebstag);
@@ -117,7 +129,7 @@ export default function RhbDashboard() {
         });
         const dayData = Object.entries(byDay)
           .map(([tag, v]) => ({
-            tag: tag.slice(5), // MM-DD
+            tag: tag.slice(5),
             puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10,
           }))
           .sort((a, b) => a.tag.localeCompare(b.tag));
