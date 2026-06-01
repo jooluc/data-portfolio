@@ -9,33 +9,19 @@ export default function DataWorkflowDiagram() {
   return (
     <div className={`transition-opacity duration-700 ${mounted ? "opacity-100" : "opacity-0"}`}>
       <style>{`
-        @keyframes bp-flow{to{stroke-dashoffset:-20}}
-        @keyframes bp-pulse{0%,100%{opacity:1}50%{opacity:.1}}
-        @keyframes bp-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
         @keyframes bp-fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes bp-scan{0%{transform:translateY(0)}100%{transform:translateY(96px)}}
         @keyframes bp-draw{from{stroke-dashoffset:300}to{stroke-dashoffset:0}}
-        @keyframes bp-flicker{0%,89%,91%,96%,100%{opacity:1}90%{opacity:.2}95%{opacity:.5}}
-        @keyframes bp-bar1{from{height:0;y:382}to{height:18;y:364}}
-        @keyframes bp-bar2{from{height:0;y:382}to{height:31;y:351}}
-        @keyframes bp-bar3{from{height:0;y:382}to{height:45;y:337}}
-        @keyframes bp-bar4{from{height:0;y:382}to{height:38;y:344}}
-        @keyframes bp-bar5{from{height:0;y:382}to{height:28;y:354}}
-        @keyframes bp-bar6{from{height:0;y:382}to{height:22;y:360}}
-        @keyframes bp-spark{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}
-        @keyframes bp-row-in{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes bp-ping{0%{opacity:1;r:3}70%{opacity:0;r:9}100%{opacity:0;r:3}}
+        @keyframes bp-pulse{0%,100%{opacity:1}50%{opacity:.15}}
+        @keyframes bp-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+        @keyframes bp-scan{0%{transform:translateY(0)}100%{transform:translateY(80px)}}
+        @keyframes bp-row{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
         @keyframes bp-metric{from{opacity:0}to{opacity:1}}
-        @keyframes bp-ping{0%{r:3;opacity:1}70%{r:8;opacity:0}100%{r:3;opacity:0}}
-        .bpw-pipe{stroke-dasharray:4 4;animation:bp-flow linear infinite}
-        .bpw-p1{animation-duration:.7s}.bpw-p2{animation-duration:.95s}.bpw-p3{animation-duration:1.2s}
-        .bpw-dot{animation:bp-pulse 1.4s ease-in-out infinite}
-        .bpw-d2{animation-delay:.45s}.bpw-d3{animation-delay:.9s}.bpw-d4{animation-delay:1.35s}
-        .bpw-ping{animation:bp-ping 2s ease-out infinite}
-        .bpw-ping2{animation:bp-ping 2s ease-out infinite .45s}
-        .bpw-ping3{animation:bp-ping 2s ease-out infinite .9s}
-        .bpw-ping4{animation:bp-ping 2s ease-out infinite 1.35s}
-        .bpw-cur{animation:bp-blink .85s step-end infinite}
-        .bpw-scan{animation:bp-scan 2s ease-in-out infinite alternate}
+        @keyframes bp-bar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+        @keyframes bp-spark{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}
+        @keyframes bp-flicker{0%,89%,91%,96%,100%{opacity:1}90%{opacity:.2}95%{opacity:.5}}
+        @keyframes p-r1{0%{transform:translateX(0);opacity:0}5%{opacity:1}90%{opacity:1}100%{transform:translateX(58px);opacity:0}}
+        @keyframes p-d1{0%{transform:translateY(0);opacity:0}5%{opacity:1}90%{opacity:1}100%{transform:translateY(58px);opacity:0}}
         .bpw-n1{animation:bp-fadeup .4s ease both .05s}
         .bpw-n2{animation:bp-fadeup .4s ease both .2s}
         .bpw-n3{animation:bp-fadeup .4s ease both .35s}
@@ -44,42 +30,79 @@ export default function DataWorkflowDiagram() {
         .bpw-l2{stroke-dasharray:300;animation:bp-draw .9s ease both .25s}
         .bpw-l3{stroke-dasharray:300;animation:bp-draw .9s ease both .4s}
         .bpw-l4{stroke-dasharray:300;animation:bp-draw .9s ease both .55s}
-        .bpw-flicker{animation:bp-flicker 4s ease-in-out infinite}
-        .bpw-flicker2{animation:bp-flicker 4s ease-in-out infinite 1.8s}
-        .bpw-b1{animation:bp-bar1 .8s cubic-bezier(.34,1.56,.64,1) both .9s}
-        .bpw-b2{animation:bp-bar2 .8s cubic-bezier(.34,1.56,.64,1) both 1s}
-        .bpw-b3{animation:bp-bar3 .8s cubic-bezier(.34,1.56,.64,1) both 1.1s}
-        .bpw-b4{animation:bp-bar4 .8s cubic-bezier(.34,1.56,.64,1) both 1.2s}
-        .bpw-b5{animation:bp-bar5 .8s cubic-bezier(.34,1.56,.64,1) both 1.3s}
-        .bpw-b6{animation:bp-bar6 .8s cubic-bezier(.34,1.56,.64,1) both 1.4s}
-        .bpw-spark{stroke-dasharray:200;animation:bp-spark 1.2s ease both .7s}
-        .bpw-r1{animation:bp-row-in .3s ease both .65s}
-        .bpw-r2{animation:bp-row-in .3s ease both .72s}
-        .bpw-r3{animation:bp-row-in .3s ease both .79s}
-        .bpw-r4{animation:bp-row-in .3s ease both .86s}
-        .bpw-r5{animation:bp-row-in .3s ease both .93s}
-        .bpw-r6{animation:bp-row-in .3s ease both 1s}
-        .bpw-r7{animation:bp-row-in .3s ease both 1.07s}
+        .bpw-ping{animation:bp-ping 2s ease-out infinite}
+        .bpw-ping2{animation:bp-ping 2s ease-out infinite .5s}
+        .bpw-ping3{animation:bp-ping 2s ease-out infinite 1s}
+        .bpw-ping4{animation:bp-ping 2s ease-out infinite 1.5s}
+        .bpw-dot{animation:bp-pulse 1.4s ease-in-out infinite}
+        .bpw-d2{animation-delay:.45s}.bpw-d3{animation-delay:.9s}.bpw-d4{animation-delay:1.35s}
+        .bpw-cur{animation:bp-blink .85s step-end infinite}
+        .bpw-scan{animation:bp-scan 2s ease-in-out infinite alternate}
+        .bpw-r1{animation:bp-row .3s ease both .65s}.bpw-r2{animation:bp-row .3s ease both .72s}
+        .bpw-r3{animation:bp-row .3s ease both .79s}.bpw-r4{animation:bp-row .3s ease both .86s}
+        .bpw-r5{animation:bp-row .3s ease both .93s}.bpw-r6{animation:bp-row .3s ease both 1s}
+        .bpw-r7{animation:bp-row .3s ease both 1.07s}
         .bpw-m1{animation:bp-metric .4s ease both .85s}
         .bpw-m2{animation:bp-metric .4s ease both 1s}
         .bpw-m3{animation:bp-metric .4s ease both 1.15s}
+        .bpw-b1{animation:bp-bar .6s cubic-bezier(.34,1.56,.64,1) both 1s;transform-origin:399px 382px}
+        .bpw-b2{animation:bp-bar .6s cubic-bezier(.34,1.56,.64,1) both 1.1s;transform-origin:429px 382px}
+        .bpw-b3{animation:bp-bar .6s cubic-bezier(.34,1.56,.64,1) both 1.2s;transform-origin:459px 382px}
+        .bpw-b4{animation:bp-bar .6s cubic-bezier(.34,1.56,.64,1) both 1.3s;transform-origin:489px 382px}
+        .bpw-b5{animation:bp-bar .6s cubic-bezier(.34,1.56,.64,1) both 1.4s;transform-origin:519px 382px}
+        .bpw-b6{animation:bp-bar .6s cubic-bezier(.34,1.56,.64,1) both 1.5s;transform-origin:549px 382px}
+        .bpw-spark{stroke-dasharray:200;animation:bp-spark 1.2s ease both .8s}
+        .bpw-flicker{animation:bp-flicker 4s ease-in-out infinite}
+        .bpw-flicker2{animation:bp-flicker 4s ease-in-out infinite 1.8s}
+        .pr-a{animation:p-r1 1.2s linear infinite}
+        .pr-b{animation:p-r1 1.2s linear infinite .4s}
+        .pr-c{animation:p-r1 1.2s linear infinite .8s}
+        .pd-a{animation:p-d1 1.2s linear infinite}
+        .pd-b{animation:p-d1 1.2s linear infinite .4s}
+        .pd-c{animation:p-d1 1.2s linear infinite .8s}
+        .pr2-a{animation:p-r1 1.4s linear infinite .2s}
+        .pr2-b{animation:p-r1 1.4s linear infinite .67s}
+        .pr2-c{animation:p-r1 1.4s linear infinite 1.13s}
       `}</style>
 
       <svg width="100%" viewBox="0 0 680 480" role="img" aria-label="Data science workflow diagram">
         <defs>
-          <marker id="bpw-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </marker>
           <clipPath id="bpw-c1"><rect x="22" y="62" width="290" height="100"/></clipPath>
         </defs>
 
         {/* Grid */}
-        <g opacity=".035">
+        <g opacity=".03">
           {[40,80,120,160,200,240,280,320,360,400,440].map(y => <line key={y} x1="0" y1={y} x2="680" y2={y} stroke="#0f172a" strokeWidth="1"/>)}
           {[85,170,255,340,425,510,595].map(x => <line key={x} x1={x} y1="0" x2={x} y2="480" stroke="#0f172a" strokeWidth="1"/>)}
         </g>
 
-        {/* ── NODE 1: COLLECT (top-left) ── */}
+        {/* Connector tracks */}
+        <rect x="312" y="112" width="58" height="12" rx="6" fill="#f1f5f9" stroke="#e2e8f0" strokeWidth="0.5"/>
+        <rect x="161" y="200" width="12" height="58" rx="6" fill="#f1f5f9" stroke="#e2e8f0" strokeWidth="0.5"/>
+        <rect x="507" y="200" width="12" height="58" rx="6" fill="#f1f5f9" stroke="#e2e8f0" strokeWidth="0.5"/>
+        <rect x="312" y="332" width="58" height="12" rx="6" fill="#f1f5f9" stroke="#e2e8f0" strokeWidth="0.5"/>
+
+        {/* Particles — right track 1→2 (dark) */}
+        <circle className="pr-a" cx="318" cy="118" r="3.5" fill="#0f172a" opacity=".5"/>
+        <circle className="pr-b" cx="318" cy="118" r="3.5" fill="#0f172a" opacity=".5"/>
+        <circle className="pr-c" cx="318" cy="118" r="3.5" fill="#0f172a" opacity=".5"/>
+
+        {/* Particles — down track 1→3 (dark) */}
+        <circle className="pd-a" cx="167" cy="206" r="3.5" fill="#0f172a" opacity=".5"/>
+        <circle className="pd-b" cx="167" cy="206" r="3.5" fill="#0f172a" opacity=".5"/>
+        <circle className="pd-c" cx="167" cy="206" r="3.5" fill="#0f172a" opacity=".5"/>
+
+        {/* Particles — down track 2→4 (green) */}
+        <circle className="pd-a" cx="513" cy="206" r="3.5" fill="#10b981" opacity=".6"/>
+        <circle className="pd-b" cx="513" cy="206" r="3.5" fill="#10b981" opacity=".6"/>
+        <circle className="pd-c" cx="513" cy="206" r="3.5" fill="#10b981" opacity=".6"/>
+
+        {/* Particles — right track 3→4 (green) */}
+        <circle className="pr2-a" cx="318" cy="338" r="3.5" fill="#10b981" opacity=".6"/>
+        <circle className="pr2-b" cx="318" cy="338" r="3.5" fill="#10b981" opacity=".6"/>
+        <circle className="pr2-c" cx="318" cy="338" r="3.5" fill="#10b981" opacity=".6"/>
+
+        {/* ── NODE 1: COLLECT ── */}
         <g className="bpw-n1">
           <path className="bpw-l1" d="M22 54 L22 36 L40 36" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
           <path className="bpw-l1" d="M312 54 L312 36 L294 36" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
@@ -95,13 +118,19 @@ export default function DataWorkflowDiagram() {
             <rect className="bpw-scan" x="22" y="62" width="290" height="2" fill="#0f172a" opacity=".06"/>
           </g>
           {[
-            {y:68,w:120,w2:80,x2:164},{y:77,w:180},{y:86,w:100,w2:120,x2:144},
-            {y:95,w:150},{y:104,w:110,w2:90,x2:154},{y:113,w:170},
-            {y:122,w:130},{y:131,w:100},{y:140,w:160},{y:149,w:120}
-          ].map(({y,w,w2,x2},i) => (
+            {y:68,cols:[{x:32,w:120},{x:164,w:80}]},
+            {y:77,cols:[{x:32,w:180}]},
+            {y:86,cols:[{x:32,w:100},{x:144,w:120}]},
+            {y:95,cols:[{x:32,w:150}]},
+            {y:104,cols:[{x:32,w:110},{x:154,w:90}]},
+            {y:113,cols:[{x:32,w:170}]},
+            {y:122,cols:[{x:32,w:130}]},
+            {y:131,cols:[{x:32,w:100}]},
+            {y:140,cols:[{x:32,w:160}]},
+            {y:149,cols:[{x:32,w:120}]},
+          ].map(({y,cols},i) => (
             <g key={y} className={`bpw-r${(i%7)+1}`}>
-              <rect x="32" y={y} width={w} height="4" fill={i%2===0?"#e2e8f0":"#f1f5f9"}/>
-              {w2 && x2 && <rect x={x2} y={y} width={w2} height="4" fill={i%2===0?"#f1f5f9":"#e2e8f0"}/>}
+              {cols.map(({x,w},j) => <rect key={j} x={x} y={y} width={w} height="4" fill={i%2===0?"#e2e8f0":"#f1f5f9"}/>)}
             </g>
           ))}
           <line x1="22" y1="162" x2="312" y2="162" stroke="#0f172a" strokeWidth="0.5"/>
@@ -113,13 +142,7 @@ export default function DataWorkflowDiagram() {
           <text x="32" y="193" fontSize="7" fill="#10b981" fontFamily="monospace" letterSpacing=".5">SYS_ONLINE</text>
         </g>
 
-        {/* Connector 1 → right */}
-        <g className="bpw-n1">
-          <line x1="312" y1="118" x2="368" y2="118" className="bpw-pipe bpw-p1" stroke="#0f172a" strokeWidth="1.2" opacity=".3" markerEnd="url(#bpw-arr)"/>
-          <text x="340" y="112" textAnchor="middle" fontSize="7" fill="#94a3b8" letterSpacing="1.5" fontFamily="monospace">RAW</text>
-        </g>
-
-        {/* ── NODE 2: CLEAN (top-right) ── */}
+        {/* ── NODE 2: CLEAN ── */}
         <g className="bpw-n2">
           <path className="bpw-l2" d="M368 54 L368 36 L386 36" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
           <path className="bpw-l2" d="M658 54 L658 36 L640 36" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
@@ -148,19 +171,7 @@ export default function DataWorkflowDiagram() {
           <text x="378" y="193" fontSize="7" fill="#10b981" fontFamily="monospace" letterSpacing=".5">PROC_OK</text>
         </g>
 
-        {/* Connector 1 → down */}
-        <g className="bpw-n1">
-          <line x1="167" y1="200" x2="167" y2="256" className="bpw-pipe bpw-p1" stroke="#0f172a" strokeWidth="1.2" opacity=".3" markerEnd="url(#bpw-arr)"/>
-          <text x="176" y="232" fontSize="7" fill="#94a3b8" letterSpacing="1.5" fontFamily="monospace">RAW</text>
-        </g>
-
-        {/* Connector 2 → down */}
-        <g className="bpw-n2">
-          <line x1="513" y1="200" x2="513" y2="256" className="bpw-pipe bpw-p2" stroke="#0f172a" strokeWidth="1.2" opacity=".3" markerEnd="url(#bpw-arr)"/>
-          <text x="522" y="232" fontSize="7" fill="#94a3b8" letterSpacing="1.5" fontFamily="monospace">CLEAN</text>
-        </g>
-
-        {/* ── NODE 3: ANALYSE (bottom-left) ── */}
+        {/* ── NODE 3: ANALYSE ── */}
         <g className="bpw-n3">
           <path className="bpw-l3" d="M22 274 L22 256 L40 256" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
           <path className="bpw-l3" d="M312 274 L312 256 L294 256" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
@@ -198,13 +209,7 @@ export default function DataWorkflowDiagram() {
           <text x="32" y="413" fontSize="7" fill="#10b981" fontFamily="monospace" letterSpacing=".5">MDL_READY</text>
         </g>
 
-        {/* Connector 3 → right */}
-        <g className="bpw-n3">
-          <line x1="312" y1="338" x2="368" y2="338" className="bpw-pipe bpw-p3" stroke="#0f172a" strokeWidth="1.2" opacity=".3" markerEnd="url(#bpw-arr)"/>
-          <text x="340" y="332" textAnchor="middle" fontSize="7" fill="#94a3b8" letterSpacing="1.5" fontFamily="monospace">MODEL</text>
-        </g>
-
-        {/* ── NODE 4: VISUALISE (bottom-right) ── */}
+        {/* ── NODE 4: VISUALISE ── */}
         <g className="bpw-n4">
           <path className="bpw-l4" d="M368 274 L368 256 L386 256" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
           <path className="bpw-l4" d="M658 274 L658 256 L640 256" fill="none" stroke="#0f172a" strokeWidth="1.5"/>
@@ -216,13 +221,13 @@ export default function DataWorkflowDiagram() {
           <line x1="368" y1="282" x2="658" y2="282" stroke="#0f172a" strokeWidth="0.5"/>
           <text x="378" y="275" fontSize="9" fontWeight="500" fill="#0f172a" letterSpacing="2" fontFamily="monospace">VISUALISE</text>
           <text x="650" y="275" textAnchor="end" fontSize="7" fill="#94a3b8" fontFamily="monospace">04</text>
-          <rect className="bpw-b1" x="388" y="364" width="24" height="18" fill="#0f172a" opacity=".08"/>
-          <rect className="bpw-b2" x="418" y="351" width="24" height="31" fill="#0f172a" opacity=".13"/>
-          <rect className="bpw-b3" x="448" y="337" width="24" height="45" fill="#0f172a" opacity=".22"/>
-          <rect className="bpw-b4" x="478" y="344" width="24" height="38" fill="#0f172a" opacity=".18"/>
-          <rect className="bpw-b5" x="508" y="354" width="24" height="28" fill="#0f172a" opacity=".12"/>
-          <rect className="bpw-b6" x="538" y="360" width="24" height="22" fill="#0f172a" opacity=".09"/>
-          <line x1="378" y1="382" x2="572" y2="382" stroke="#0f172a" strokeWidth="0.5" opacity=".3"/>
+          <rect className="bpw-b1" x="388" y="335" width="22" height="47" fill="#0f172a" opacity=".1"/>
+          <rect className="bpw-b2" x="418" y="320" width="22" height="62" fill="#0f172a" opacity=".15"/>
+          <rect className="bpw-b3" x="448" y="304" width="22" height="78" fill="#0f172a" opacity=".24"/>
+          <rect className="bpw-b4" x="478" y="312" width="22" height="70" fill="#0f172a" opacity=".18"/>
+          <rect className="bpw-b5" x="508" y="326" width="22" height="56" fill="#0f172a" opacity=".13"/>
+          <rect className="bpw-b6" x="538" y="334" width="22" height="48" fill="#0f172a" opacity=".1"/>
+          <line x1="378" y1="382" x2="572" y2="382" stroke="#0f172a" strokeWidth="0.5" opacity=".25"/>
           <g className="bpw-m1">
             <rect x="378" y="288" width="260" height="16" fill="#f8fafc" stroke="#0f172a" strokeWidth="0.4"/>
             <text x="384" y="299" fontSize="7.5" fill="#64748b" fontFamily="monospace">dashboard</text>
