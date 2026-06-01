@@ -1,13 +1,12 @@
 "use client";
 
 import HalftoneBackground from "@/components/HalftoneBackground";
-import GraubuendenMap from "../components/GraubuendenMap";
+import PipelineDiagram from "../components/PipelineDiagram";
 import RhbDashboard from "../components/RhbDashboard";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
-  BarChart3,
   Database,
   GitBranch,
   LineChart,
@@ -16,49 +15,23 @@ import {
 } from "lucide-react";
 import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 import { SiDatacamp } from "react-icons/si";
-import {
-  ResponsiveContainer,
-  LineChart as ReLineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
-
-const metrics = [
-  { label: "Data Sources", value: "12+" },
-  { label: "SQL Models", value: "38" },
-  { label: "Refresh Cycle", value: "Daily" },
-];
 
 const stack = [
   "Python",
   "SQL",
   "PostgreSQL",
-  "FastAPI",
-  "Streamlit",
-  "Plotly",
-  "Docker",
+  "Supabase",
+  "Next.js",
+  "React",
   "GitHub Actions",
-];
-
-const chartData = [
-  { month: "Jan", value: 62 },
-  { month: "Feb", value: 68 },
-  { month: "Mar", value: 74 },
-  { month: "Apr", value: 71 },
-  { month: "May", value: 83 },
-  { month: "Jun", value: 91 },
-  { month: "Jul", value: 88 },
-  { month: "Aug", value: 96 },
+  "Vercel",
 ];
 
 const features = [
   {
     icon: Database,
     title: "Data Engineering",
-    text: "Working with structured data, SQL transformations and small data pipelines to prepare information for analysis and visualization.",
+    text: "Working with structured data, SQL transformations and automated pipelines to prepare information for analysis and visualization.",
   },
   {
     icon: LineChart,
@@ -72,113 +45,6 @@ const features = [
   },
 ];
 
-function AnimatedGrid() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-    };
-  }, []);
-
-  return (
-    <div className="absolute inset-0 overflow-hidden opacity-70">
-      <motion.div
-        animate={{
-          backgroundPosition: [
-            "0px 0px",
-            "0px 40px",
-            "40px 40px",
-            "0px 0px",
-          ],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:64px_64px]"
-      />
-
-      <motion.div
-        className="pointer-events-none absolute h-[420px] w-[420px] rounded-full bg-cyan-200/40 blur-3xl"
-        animate={{
-          x: mousePosition.x - 210,
-          y: mousePosition.y - 210,
-        }}
-        transition={{
-          type: "spring",
-          damping: 28,
-          stiffness: 120,
-          mass: 0.6,
-        }}
-      />
-
-      <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-slate-200/60 blur-3xl" />
-
-      <motion.div
-        animate={{ x: [0, 22, 0], y: [0, -18, 0] }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute right-20 top-32 h-40 w-40 rounded-full bg-cyan-100 blur-2xl"
-      />
-
-      <div className="absolute bottom-0 left-0 h-56 w-full bg-gradient-to-b from-transparent to-white" />
-    </div>
-  );
-}
-
-function MiniChart() {
-  const bars = useMemo(() => [38, 62, 44, 78, 54, 88, 72, 96], []);
-
-  return (
-    <div className="rounded-3xl border border-slate-200 bg-white/80 p-5 shadow-xl shadow-slate-200/70 backdrop-blur">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <p className="text-sm text-slate-500">Regional Market Index</p>
-          <p className="text-2xl font-semibold tracking-tight text-slate-950">
-            +14.8%
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-slate-950 p-3 text-white">
-          <BarChart3 className="h-5 w-5" />
-        </div>
-      </div>
-
-      <div className="flex h-40 items-end gap-3">
-        {bars.map((height, index) => (
-          <motion.div
-            key={index}
-            initial={{ height: 0 }}
-            animate={{ height: `${height}%` }}
-            transition={{ duration: 0.8, delay: index * 0.08 }}
-            className="flex-1 rounded-t-xl bg-slate-900"
-          />
-        ))}
-      </div>
-
-      <div className="mt-5 flex justify-between text-xs text-slate-400">
-        <span>Jan</span>
-        <span>Mar</span>
-        <span>May</span>
-        <span>Jul</span>
-        <span>Sep</span>
-        <span>Nov</span>
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
   const { scrollYProgress } = useScroll();
   const yHero = useTransform(scrollYProgress, [0, 1], [0, -220]);
@@ -189,6 +55,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
+
+      {/* ── Hero ── */}
       <section className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10 lg:px-16">
         <HalftoneBackground />
 
@@ -199,24 +67,15 @@ export default function Home() {
             </div>
             <span className="font-semibold tracking-tight">Luca Joos</span>
           </div>
-
           <div className="hidden items-center gap-8 text-sm text-slate-600 md:flex">
-            <a href="#about" className="hover:text-slate-950">
-              About
-            </a>
-            <a href="#project" className="hover:text-slate-950">
-              Project
-            </a>
-            <a href="#architecture" className="hover:text-slate-950">
-              Architecture
-            </a>
-            <a href="#dashboard" className="hover:text-slate-950">
-              Dashboard
-            </a>
+            <a href="#about"        className="hover:text-slate-950">About</a>
+            <a href="#project"      className="hover:text-slate-950">Project</a>
+            <a href="#architecture" className="hover:text-slate-950">Architecture</a>
+            <a href="#dashboard"    className="hover:text-slate-950">Dashboard</a>
           </div>
         </nav>
 
-        <div className="relative z-10 mx-auto grid min-h-[calc(100vh-92px)] max-w-7xl items-center gap-14 py-20 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="relative z-10 mx-auto grid min-h-[calc(100vh-92px)] max-w-7xl items-center gap-14 py-20 lg:grid-cols-2">
           <motion.div style={{ y: mounted ? yHero : 0 }}>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm text-slate-600 shadow-sm backdrop-blur">
               <Sparkles className="h-4 w-4" />
@@ -238,7 +97,6 @@ export default function Home() {
               >
                 View Dashboard <ArrowUpRight className="h-4 w-4" />
               </a>
-
               <a
                 href="#architecture"
                 className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white/70 px-6 py-3 font-medium text-slate-900 transition hover:bg-white"
@@ -248,96 +106,74 @@ export default function Home() {
             </div>
           </motion.div>
 
+          {/* Pipeline Diagram statt MiniChart */}
           <motion.div style={{ y: mounted ? yCards : 0 }} className="relative">
-            <MiniChart />
-
-            <div className="mt-5 grid grid-cols-3 gap-4">
-              {metrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="rounded-3xl border border-slate-200 bg-white/80 p-5 text-center shadow-sm backdrop-blur"
-                >
-                  <p className="text-2xl font-semibold tracking-tight">
-                    {metric.value}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    {metric.label}
-                  </p>
-                </div>
-              ))}
+            <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xl shadow-slate-200/70 backdrop-blur">
+              <PipelineDiagram />
             </div>
           </motion.div>
         </div>
       </section>
 
+      {/* ── About ── */}
       <section id="about" className="bg-white px-6 py-28 md:px-10 lg:px-16">
-  <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-[0.8fr_1.2fr] md:items-center">
-    <div className="relative">
-      <img
-        src="/images/profile.jpg"
-        alt="Portrait of Luca"
-        className="aspect-[4/5] w-full rounded-[2.5rem] object-cover object-top shadow-xl shadow-slate-200"
-      />
-    </div>
+        <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-[0.8fr_1.2fr] md:items-center">
+          <div className="relative">
+            <img
+              src="/images/profile.jpg"
+              alt="Portrait of Luca"
+              className="aspect-[4/5] w-full rounded-[2.5rem] object-cover object-top shadow-xl shadow-slate-200"
+            />
+          </div>
 
-    <div>
-      <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
-        About Me
-      </p>
+          <div>
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
+              About Me
+            </p>
 
-      <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-        Hi, I&apos;m Luca — Applied Data Scientist with a background in criminal analytics.
-      </h2>
+            <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
+              Hi, I&apos;m Luca — Applied Data Scientist with a background in criminal analytics.
+            </h2>
 
-      <div className="mt-8 space-y-6 text-lg leading-8 text-slate-600">
-        <p>
-          I hold a Master&apos;s degree in Applied Data Science from the Lucerne University of Applied Sciences (HSLU) and a Bachelor&apos;s degree in Information Science from the University of Applied Sciences of the Grisons (FHGR), where I specialised in Web &amp; Usability Engineering.
-        </p>
+            <div className="mt-8 space-y-6 text-lg leading-8 text-slate-600">
+              <p>
+                I hold a Master&apos;s degree in Applied Data Science from the Lucerne University of Applied Sciences (HSLU) and a Bachelor&apos;s degree in Information Science from the University of Applied Sciences of the Grisons (FHGR), where I specialised in Web &amp; Usability Engineering.
+              </p>
+              <p>
+                Professionally, I work as a criminal analyst, where I apply data-driven methods to real-world investigative challenges. Prior to that, I worked as a cybercrime investigator — an experience that sharpened my analytical thinking and attention to detail.
+              </p>
+              <p>
+                Through personal projects, I explore data engineering, business intelligence and interactive visualisation — combining technical rigour with a strong focus on making data understandable and actionable.
+              </p>
+            </div>
 
-        <p>
-          Professionally, I work as a criminal analyst, where I apply data-driven methods to real-world investigative challenges. Prior to that, I worked as a cybercrime investigator — an experience that sharpened my analytical thinking and attention to detail.
-        </p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              {[
+                "Python", "SQL", "PostgreSQL", "Data Visualization",
+                "Analytics", "ETL Pipelines", "Machine Learning", "React", "Next.js",
+              ].map((skill) => (
+                <span
+                  key={skill}
+                  className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <p>
-          Through personal projects, I explore data engineering, business intelligence and interactive visualisation — combining technical rigour with a strong focus on making data understandable and actionable.
-        </p>
-      </div>
-
-      <div className="mt-10 flex flex-wrap gap-3">
-        {[
-          "Python",
-          "SQL",
-          "PostgreSQL",
-          "Data Visualization",
-          "Analytics",
-          "ETL Pipelines",
-          "Machine Learning",
-          "React",
-          "Next.js",
-        ].map((skill) => (
-          <span
-            key={skill}
-            className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700"
-          >
-            {skill}
-          </span>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-
+      {/* ── Project ── */}
       <section id="project" className="px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
               Project
             </p>
-
             <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
               Projects focused on practical analytics and data visualization.
             </h2>
-
             <p className="mt-6 text-lg leading-8 text-slate-600">
               The goal of these projects is not only to work with data technically, but also to present information in a way that is intuitive, visually clean and useful for decision-making.
             </p>
@@ -352,11 +188,7 @@ export default function Home() {
                 <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100">
                   <Icon className="h-6 w-6" />
                 </div>
-
-                <h3 className="text-xl font-semibold tracking-tight">
-                  {title}
-                </h3>
-
+                <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
                 <p className="mt-4 leading-7 text-slate-600">{text}</p>
               </div>
             ))}
@@ -364,6 +196,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Architecture ── */}
       <section
         id="architecture"
         className="relative overflow-hidden bg-slate-950 px-6 py-28 text-white md:px-10 lg:px-16"
@@ -374,49 +207,25 @@ export default function Home() {
         />
 
         <div className="relative mx-auto max-w-7xl">
-          <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-            <div>
-              <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-400">
-                Architecture
-              </p>
+          <div className="max-w-2xl">
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-400">
+              Architecture
+            </p>
+            <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
+              From raw data to insight layer.
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-slate-300">
+              A fully automated data workflow — from the Swiss open transport API to a live dashboard. Data is fetched, transformed and stored daily without manual intervention.
+            </p>
+          </div>
 
-              <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                From raw data to insight layer.
-              </h2>
-
-              <p className="mt-6 text-lg leading-8 text-slate-300">
-                A simplified data workflow combining data collection, transformation and visualization. The focus lies on creating understandable and reproducible analytics applications.
-              </p>
-            </div>
-
-            <div className="grid gap-4">
-              {[
-                "Extract APIs & CSV files",
-                "Validate and clean with Python",
-                "Model facts and dimensions in SQL",
-                "Serve metrics to dashboard",
-                "Visualize KPIs and trends",
-              ].map((step, index) => (
-                <motion.div
-                  key={step}
-                  initial={{ opacity: 0, x: 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.08 }}
-                  className="flex items-center gap-5 rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur"
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-slate-950">
-                    {index + 1}
-                  </span>
-                  <span className="text-slate-100">{step}</span>
-                </motion.div>
-              ))}
-            </div>
+          <div className="mt-14 rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <PipelineDiagram />
           </div>
         </div>
       </section>
 
-      {/* RhB Dashboard Section */}
+      {/* ── Dashboard ── */}
       <section id="dashboard" className="px-6 py-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -424,12 +233,10 @@ export default function Home() {
               <p className="mb-4 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
                 Dashboard
               </p>
-
               <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
                 RhB Punctuality Analytics.
               </h2>
             </div>
-
             <p className="max-w-md leading-7 text-slate-600">
               A live data pipeline that fetches daily punctuality data from the Swiss open transport API, stores it in Supabase and visualizes KPIs in real time.
             </p>
@@ -441,7 +248,6 @@ export default function Home() {
               <span className="h-3 w-3 rounded-full bg-slate-300" />
               <span className="h-3 w-3 rounded-full bg-slate-300" />
             </div>
-
             <div className="rounded-b-[1.5rem] bg-slate-50 p-8">
               <RhbDashboard />
             </div>
@@ -449,6 +255,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Tech Stack ── */}
       <section className="px-6 pb-28 md:px-10 lg:px-16">
         <div className="mx-auto max-w-7xl rounded-[2rem] border border-slate-200 bg-white p-8 md:p-12">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center">
@@ -456,12 +263,10 @@ export default function Home() {
               <p className="mb-3 text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
                 Tech Stack
               </p>
-
               <h2 className="text-3xl font-semibold tracking-tight">
                 Built for reproducibility.
               </h2>
             </div>
-
             <div className="flex max-w-3xl flex-wrap gap-3">
               {stack.map((item) => (
                 <span
@@ -476,42 +281,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Footer ── */}
       <footer
         id="contact"
         className="border-t border-slate-200 px-6 py-10 md:px-10 lg:px-16"
       >
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-sm text-slate-500 md:flex-row">
           <p>© 2026 Luca Joos — Data Portfolio</p>
-
           <div className="flex items-center gap-5 text-slate-600">
-            <a
-              href="https://github.com/jooluc"
-              target="_blank"
-              className="transition hover:text-slate-950"
-            >
+            <a href="https://github.com/jooluc" target="_blank" className="transition hover:text-slate-950">
               <FaGithub size={22} />
             </a>
-
-            <a
-              href="https://www.linkedin.com/in/luca-joos-256b01183/"
-              target="_blank"
-              className="transition hover:text-slate-950"
-            >
+            <a href="https://www.linkedin.com/in/luca-joos-256b01183/" target="_blank" className="transition hover:text-slate-950">
               <FaLinkedin size={22} />
             </a>
-
-            <a
-              href="mailto:luca.joos@protonmail.ch"
-              className="transition hover:text-slate-950"
-            >
+            <a href="mailto:luca.joos@protonmail.ch" className="transition hover:text-slate-950">
               <FaEnvelope size={22} />
             </a>
-
-            <a
-              href="https://www.datacamp.com/portfolio/lucajoos"
-              target="_blank"
-              className="transition hover:text-slate-950"
-            >
+            <a href="https://www.datacamp.com/portfolio/lucajoos" target="_blank" className="transition hover:text-slate-950">
               <SiDatacamp size={22} />
             </a>
           </div>
