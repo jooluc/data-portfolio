@@ -97,7 +97,6 @@ export default function PipelineDiagram() {
           <text x="348" y="170" textAnchor="middle" fontSize="10" fill="#0c447c">rhb_istdaten</text>
           <rect x="312" y="182" width="72" height="18" rx="4" fill="none" stroke="#85b7eb" strokeWidth="0.5"/>
           <text x="348" y="192" textAnchor="middle" fontSize="10" fill="#0c447c">RLS enabled</text>
-          <text x="348" y="226" textAnchor="middle" fontSize="10" fill="#94a3b8">~9k+ rows</text>
         </g>
 
         {/* ── Flow 3: Actions → triggers ETL ── */}
