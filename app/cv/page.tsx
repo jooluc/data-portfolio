@@ -215,20 +215,9 @@ export default function CvPage() {
 
         {/* Referenzen */}
         <Section title="Referenzen">
-          <div className="grid gap-4 md:grid-cols-2">
-            <ReferenceCard
-              name="Rolf Caplazi"
-              role="Chef Cyberermittlung"
-              phone="+41 81 257 75 05"
-              email="rolf.caplazi@kapo.gr.ch"
-            />
-            <ReferenceCard
-              name="Paul Sennrich"
-              role="GL & Inhaber Kletterzentrum"
-              phone="+41 76 342 84 02"
-              email="pablo@kletterzentrumchur.ch"
-            />
-          </div>
+            <p className="text-slate-600 leading-8">
+                Referenzen werden auf Anfrage gerne zur Verfügung gestellt.
+            </p>
         </Section>
 
       </div>
