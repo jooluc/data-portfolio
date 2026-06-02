@@ -47,7 +47,7 @@ export default function CvPage() {
           <div className="flex flex-col gap-2 text-sm text-slate-600 md:text-right">
             <a href="mailto:luca.joos@protonmail.ch" className="flex items-center gap-2 hover:text-slate-950 md:flex-row-reverse">
               <Mail className="h-4 w-4 text-slate-400" />
-              luca.joos@protonmail.ch
+              luca.joos-portfolio@pm.me
             </a>
             <a href="tel:+41795871232" className="flex items-center gap-2 hover:text-slate-950 md:flex-row-reverse">
               <Phone className="h-4 w-4 text-slate-400" />
