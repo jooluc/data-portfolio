@@ -71,7 +71,8 @@ export default function CvPage() {
         {/* Über meine Person */}
         <Section title="Über meine Person">
           <p className="text-slate-600 leading-8">
-            Ich bin ein motivierter und engagierter Teamplayer, der durch Zuverlässigkeit und Präzision überzeugt. Darüber hinaus lerne ich gerne Neues und strebe kontinuierlich danach, mich in bereits Erlerntem weiterzuentwickeln. In meiner Freizeit verbringe ich am liebsten Zeit mit meiner Familie und finde in der Bewegung einen wertvollen Ausgleich. Daneben fasziniert mich die Welt der Technik, in der ich mich gerne mit aktuellen Entwicklungen auseinandersetze.
+            Ich bin ein datenaffiner Analytiker mit einem breiten Ausbildungshintergrund in Informatik, Data Science und einem ungewöhnlichen beruflichen Werdegang — von der Automation über die Betriebsleitung bis zur Kriminalanalyse. Diese Vielfalt hat mir ein pragmatisches, lösungsorientiertes Denken vermittelt und die Fähigkeit, komplexe Sachverhalte strukturiert zu durchdringen.
+            <\br>Technisch interessieren mich insbesondere automatisierte Datenpipelines, datengetriebene Entscheidungsunterstützung und die Verbindung von analytischer Tiefe mit verständlicher Visualisierung. In meiner Freizeit erweitere ich diese Kenntnisse durch eigene Projekte
           </p>
         </Section>
 
