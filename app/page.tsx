@@ -45,7 +45,7 @@ function HomeContent() {
       <section className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10 lg:px-16">
         <HalftoneBackground />
         <Navbar />
-        <nav className="relative z-50 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/70 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
+        <div className="relative z-10 mx-auto grid min-h-[calc(100vh-92px)] max-w-7xl items-center gap-14 py-20 lg:grid-cols-2">
           <motion.div style={{ y: mounted ? yHero : 0 }}>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm text-slate-600 shadow-sm backdrop-blur">
               <Sparkles className="h-4 w-4" />
