@@ -8,10 +8,14 @@ export default function CvLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [blocked, setBlocked] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (blocked) return;
     setLoading(true);
     setError(false);
 
@@ -25,8 +29,26 @@ export default function CvLogin() {
       router.push("/cv");
       router.refresh();
     } else {
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
       setError(true);
       setLoading(false);
+
+      if (newAttempts >= 5) {
+        setBlocked(true);
+        setCountdown(30);
+        const interval = setInterval(() => {
+          setCountdown((c) => {
+            if (c <= 1) {
+              clearInterval(interval);
+              setBlocked(false);
+              setAttempts(0);
+              return 0;
+            }
+            return c - 1;
+          });
+        }, 1000);
+      }
     }
   }
 
@@ -62,26 +84,38 @@ export default function CvLogin() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Access code"
                 autoFocus
+                disabled={blocked}
                 className={`w-full rounded-2xl border px-4 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400
-                  ${error
+                  ${error && !blocked
                     ? "border-red-300 bg-red-50 focus:border-red-400"
+                    : blocked
+                    ? "border-slate-200 bg-slate-100 cursor-not-allowed text-slate-400"
                     : "border-slate-200 bg-slate-50 focus:border-slate-400 focus:bg-white"
                   }`}
               />
-              {error && (
+              {error && !blocked && (
                 <p className="mt-2 text-xs text-red-500">
-                  Incorrect access code. Please try again.
+                  Incorrect access code. Please try again. ({5 - attempts} attempts remaining)
+                </p>
+              )}
+              {blocked && (
+                <p className="mt-2 text-xs text-amber-600">
+                  Too many failed attempts. Please wait {countdown} seconds.
                 </p>
               )}
             </div>
 
             <button
               type="submit"
-              disabled={loading || !password}
+              disabled={loading || !password || blocked}
               className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 font-medium text-white transition hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {loading ? "Verifying..." : "Access CV"}
-              {!loading && <ArrowRight className="h-4 w-4" />}
+              {blocked
+                ? `Wait ${countdown}s`
+                : loading
+                ? "Verifying..."
+                : "Access CV"}
+              {!loading && !blocked && <ArrowRight className="h-4 w-4" />}
             </button>
           </form>
         </div>
