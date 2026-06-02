@@ -70,10 +70,12 @@ export default function CvPage() {
 
         {/* Über meine Person */}
         <Section title="Über meine Person">
-          <p className="text-slate-600 leading-8">
-            Ich bin ein datenaffiner Analytiker mit einem breiten Ausbildungshintergrund in Informatik, Data Science und einem ungewöhnlichen beruflichen Werdegang — von der Automation über die Betriebsleitung bis zur Kriminalanalyse. Diese Vielfalt hat mir ein pragmatisches, lösungsorientiertes Denken vermittelt und die Fähigkeit, komplexe Sachverhalte strukturiert zu durchdringen.
-            <\br>Technisch interessieren mich insbesondere automatisierte Datenpipelines, datengetriebene Entscheidungsunterstützung und die Verbindung von analytischer Tiefe mit verständlicher Visualisierung. In meiner Freizeit erweitere ich diese Kenntnisse durch eigene Projekte
-          </p>
+            <p className="text-slate-600 leading-8">
+                Ich bin ein datenaffiner Analytiker mit einem breiten Ausbildungshintergrund in Informatik, Data Science und einem ungewöhnlichen beruflichen Werdegang — von der Automation über die Betriebsleitung bis zur Kriminalanalyse. Diese Vielfalt hat mir ein pragmatisches, lösungsorientiertes Denken vermittelt und die Fähigkeit, komplexe Sachverhalte strukturiert zu durchdringen.
+                </p>
+                <p className="text-slate-600 leading-8 mt-4">
+                Technisch interessieren mich insbesondere automatisierte Datenpipelines, datengetriebene Entscheidungsunterstützung und die Verbindung von analytischer Tiefe mit verständlicher Visualisierung. In meiner Freizeit erweitere ich diese Kenntnisse durch eigene Projekte
+                </p>
         </Section>
 
         {/* Berufserfahrung */}
