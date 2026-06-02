@@ -111,7 +111,7 @@ export default function PipelineDiagram() {
           <rect x="452" y="166" width="88" height="18" rx="4" fill="none" stroke="#fac775" strokeWidth="0.5"/>
           <text x="496" y="176" textAnchor="middle" fontSize="10" fill="#633806">ubuntu-latest</text>
           <rect x="452" y="188" width="88" height="18" rx="4" fill="none" stroke="#fac775" strokeWidth="0.5"/>
-          <text x="496" y="198" textAnchor="middle" fontSize="10" fill="#633806">python 3.11</text>
+          <text x="496" y="198" textAnchor="middle" fontSize="10" fill="#633806">python</text>
           <text x="496" y="226" textAnchor="middle" fontSize="10" fill="#94a3b8">08:00 CH daily</text>
         </g>
 
