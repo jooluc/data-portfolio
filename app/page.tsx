@@ -1,6 +1,7 @@
 "use client";
 
 import HalftoneBackground from "@/components/HalftoneBackground";
+import Navbar from "../components/Navbar";
 import PipelineDiagram from "../components/PipelineDiagram";
 import DataWorkflowDiagram from "../components/DataWorkflowDiagram";
 import RhbDashboard from "../components/RhbDashboard";
@@ -23,26 +24,6 @@ const stack = [
   "Next.js", "React", "GitHub Actions", "Vercel",
 ];
 
-function LanguageToggle() {
-  const { lang, setLang } = useLanguage();
-  return (
-    <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-white/80 p-1 text-xs font-medium">
-      <button
-        onClick={() => setLang("en")}
-        className={`rounded-full px-2.5 py-1 transition ${lang === "en" ? "bg-slate-950 text-white" : "text-slate-500 hover:text-slate-950"}`}
-      >
-        EN
-      </button>
-      <button
-        onClick={() => setLang("de")}
-        className={`rounded-full px-2.5 py-1 transition ${lang === "de" ? "bg-slate-950 text-white" : "text-slate-500 hover:text-slate-950"}`}
-      >
-        DE
-      </button>
-    </div>
-  );
-}
-
 function HomeContent() {
   const { t } = useLanguage();
   const { scrollYProgress } = useScroll();
@@ -63,22 +44,7 @@ function HomeContent() {
       {/* ── Hero ── */}
       <section className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10 lg:px-16">
         <HalftoneBackground />
-        <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/70 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-white">
-              <GitBranch className="h-4 w-4" />
-            </div>
-            <span className="font-semibold tracking-tight">Luca Joos</span>
-          </div>
-          <div className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
-            <a href="#about"        className="hover:text-slate-950">{t("nav.about")}</a>
-            <a href="#project"      className="hover:text-slate-950">{t("nav.project")}</a>
-            <a href="#architecture" className="hover:text-slate-950">{t("nav.architecture")}</a>
-            <a href="#dashboard"    className="hover:text-slate-950">{t("nav.dashboard")}</a>
-            <LanguageToggle />
-          </div>
-        </nav>
-
+        <Navbar />
         <div className="relative z-10 mx-auto grid min-h-[calc(100vh-92px)] max-w-7xl items-center gap-14 py-20 lg:grid-cols-2">
           <motion.div style={{ y: mounted ? yHero : 0 }}>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm text-slate-600 shadow-sm backdrop-blur">
