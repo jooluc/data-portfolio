@@ -10,8 +10,8 @@ import { Train, Clock, AlertCircle, TrendingUp } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
 
 const getSupabase = () => createClient(
-  "https://ivalqhvetjqwlwnuacar.supabase.co",
-  "sb_publishable_OXWcHQDOM3qrEwtuEczPYw_c-dBx7EN"
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
 interface RhbRow {
