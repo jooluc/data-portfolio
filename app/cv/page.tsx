@@ -22,7 +22,7 @@ export default function CvPage() {
               ← Portfolio
             </a>
             <a
-              href="/cv/download"
+              href="/cv/Lebenslauf_Luca_Joos.pdf"
               className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-xs font-medium text-white transition hover:bg-slate-800"
             >
               <ArrowDownToLine className="h-3.5 w-3.5" />
