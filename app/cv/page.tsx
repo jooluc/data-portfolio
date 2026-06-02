@@ -39,7 +39,7 @@ export default function CvPage() {
           <div>
             <p className="mb-2 text-sm font-medium uppercase tracking-[0.24em] text-slate-400">Curriculum Vitae</p>
             <h1 className="text-6xl font-semibold tracking-tight text-slate-950">Luca Joos</h1>
-            <p className="mt-3 text-xl text-slate-500">Applied Data Scientist</p>
+            <p className="mt-3 text-xl text-slate-500">MSc Applied Data Scientist</p>
             <p className="mt-1 text-sm text-slate-400">geb. 04.06.1990</p>
           </div>
 
@@ -157,8 +157,8 @@ export default function CvPage() {
               level={3}
               description="Komplexe Abfragen, Views und Aggregationen. Fokus auf konsistente, performante Datenbereitstellung."
             />
-            <SkillItem name="R" level={3} description="Statistische Analyse und Vorhersagemodelle." />
-            <SkillItem name="PowerBI" level={3} description="Visualisierung und Reporting für polizeiliche Dienststellen." />
+            <SkillItem name="R" level={2} description="Statistische Analyse und Vorhersagemodelle." />
+            <SkillItem name="PowerBI" level={4} description="Visualisierung und Reporting für polizeiliche Dienststellen." />
             <SkillItem name="Excel" level={4} description="Fortgeschrittene Datenaufbereitung und Auswertung." />
             <SkillItem name="Git / GitHub" level={3} description="Versionskontrolle und kollaborative Entwicklung." />
           </div>
