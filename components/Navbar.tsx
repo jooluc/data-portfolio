@@ -37,7 +37,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/70 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
+    <nav className="relative z-50 mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/70 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
       {/* Logo */}
       <div className="flex items-center gap-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-white">
@@ -74,7 +74,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-full mt-2 rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-lg backdrop-blur md:hidden"
+            className="absolute left-0 right-0 top-full mt-2 rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-lg backdrop-blur md:hidden z-50"
           >
             <div className="flex flex-col gap-1">
               {links.map(({ href, label }) => (
