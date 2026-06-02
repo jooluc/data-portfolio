@@ -4,7 +4,7 @@ import HalftoneBackground from "@/components/HalftoneBackground";
 import PipelineDiagram from "../components/PipelineDiagram";
 import DataWorkflowDiagram from "../components/DataWorkflowDiagram";
 import RhbDashboard from "../components/RhbDashboard";
-import { LanguageProvider, useLanguage } from "../components/LanguageContext";
+import { useLanguage } from "../components/LanguageContext";
 import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
@@ -214,7 +214,7 @@ function HomeContent() {
           <div className="flex items-center gap-5 text-slate-600">
             <a href="https://github.com/jooluc" target="_blank" className="transition hover:text-slate-950"><FaGithub size={22} /></a>
             <a href="https://www.linkedin.com/in/luca-joos-256b01183/" target="_blank" className="transition hover:text-slate-950"><FaLinkedin size={22} /></a>
-            <a href="mailto:luca.joos@protonmail.ch" className="transition hover:text-slate-950"><FaEnvelope size={22} /></a>
+            <a href="mailto:luca.joos-portfolio@pm.me" className="transition hover:text-slate-950"><FaEnvelope size={22} /></a>
             <a href="https://www.datacamp.com/portfolio/lucajoos" target="_blank" className="transition hover:text-slate-950"><SiDatacamp size={22} /></a>
           </div>
         </div>
