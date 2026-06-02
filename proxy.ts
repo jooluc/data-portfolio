@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/cv")) {
+  if (pathname.startsWith("/cv") && !pathname.startsWith("/cv/login")) {
     const cookie = req.cookies.get("cv_access");
     const token = process.env.CV_TOKEN ?? "granted";
 
