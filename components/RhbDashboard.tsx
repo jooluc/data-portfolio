@@ -13,13 +13,6 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 const getSupabase = () => createClient(supabaseUrl, supabaseKey);
 
-interface RhbRow {
-  betriebstag: string;
-  linien_text: string;
-  abfahrt_verspaetung_min: number | null;
-  puenktlich: boolean | null;
-}
-
 interface KPIs {
   puenktlichkeit: number;
   medianVerspaetung: number;
@@ -88,58 +81,21 @@ export default function RhbDashboard() {
     async function fetchData() {
       const supabase = getSupabase();
       try {
-        // Letzte 5000 Zeilen fuer KPIs und Linienstatistiken
-        const { data: raw, error: e1 } = await supabase
-          .from("rhb_istdaten")
-          .select("betriebstag, linien_text, abfahrt_verspaetung_min, puenktlich")
-          .order("betriebstag", { ascending: false })
-          .limit(5000);
-
+        // 1. KPIs via RPC (alle Daten)
+        const { data: kpiData, error: e1 } = await supabase.rpc("rhb_kpis");
         if (e1) throw new Error(e1.message);
-        if (!raw || raw.length === 0) throw new Error("Keine Daten gefunden.");
-
-        const rows = raw as RhbRow[];
-        setLatestDate(rows[0].betriebstag);
-
-        // KPIs berechnen
-        const withDelay      = rows.filter((r) => r.abfahrt_verspaetung_min !== null);
-        const delays         = withDelay.map((r) => r.abfahrt_verspaetung_min as number).sort((a, b) => a - b);
-        const puenktlichRows = rows.filter((r) => r.puenktlich !== null);
-        const puenktlichkeit = puenktlichRows.length > 0
-          ? (puenktlichRows.filter((r) => r.puenktlich).length / puenktlichRows.length) * 100 : 0;
-        const median = delays.length > 0 ? delays[Math.floor(delays.length / 2)] : 0;
-        const max    = delays.length > 0 ? Math.max(...delays) : 0;
-
+        if (!kpiData || kpiData.length === 0) throw new Error("Keine KPI-Daten gefunden.");
+        const kpi = kpiData[0];
+        setLatestDate(kpi.latest_date);
         setKpis({
-          puenktlichkeit:    Math.round(puenktlichkeit * 10) / 10,
-          medianVerspaetung: Math.round(median * 10) / 10,
-          totalStopps:       rows.length,
-          maxVerspaetung:    Math.round(max * 10) / 10,
+          puenktlichkeit:    Math.round(kpi.puenktlichkeit * 10) / 10,
+          medianVerspaetung: Math.round(kpi.median_verspaetung * 10) / 10,
+          totalStopps:       kpi.total_stopps,
+          maxVerspaetung:    Math.round(kpi.max_verspaetung * 10) / 10,
         });
 
-        // Puenktlichkeit nach Linie
-        const byLine: Record<string, { total: number; puenktlich: number }> = {};
-        rows.forEach((r) => {
-          if (!r.linien_text) return;
-          if (!byLine[r.linien_text]) byLine[r.linien_text] = { total: 0, puenktlich: 0 };
-          byLine[r.linien_text].total++;
-          if (r.puenktlich) byLine[r.linien_text].puenktlich++;
-        });
-        setLineStats(
-          Object.entries(byLine)
-            .filter(([, v]) => v.total >= 20)
-            .map(([linie, v]) => ({
-              linie,
-              puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10,
-              stopps: v.total,
-            }))
-            .sort((a, b) => b.puenktlichkeit - a.puenktlichkeit)
-        );
-
-        // Puenktlichkeit pro Tag via Datenbankfunktion
-        const { data: dayData, error: e2 } = await supabase
-          .rpc("rhb_puenktlichkeit_pro_tag");
-
+        // 2. Puenktlichkeit pro Tag via RPC (alle Tage)
+        const { data: dayData, error: e2 } = await supabase.rpc("rhb_puenktlichkeit_pro_tag");
         if (!e2 && dayData) {
           setDayStats(
             (dayData as { betriebstag: string; puenktlichkeit: number }[])
@@ -148,6 +104,33 @@ export default function RhbDashboard() {
                 puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
               }))
               .sort((a, b) => a.tag.localeCompare(b.tag))
+          );
+        }
+
+        // 3. Puenktlichkeit nach Linie (letzte 5000 Zeilen)
+        const { data: raw, error: e3 } = await supabase
+          .from("rhb_istdaten")
+          .select("linien_text, puenktlich")
+          .order("betriebstag", { ascending: false })
+          .limit(5000);
+
+        if (!e3 && raw) {
+          const byLine: Record<string, { total: number; puenktlich: number }> = {};
+          raw.forEach((r) => {
+            if (!r.linien_text) return;
+            if (!byLine[r.linien_text]) byLine[r.linien_text] = { total: 0, puenktlich: 0 };
+            byLine[r.linien_text].total++;
+            if (r.puenktlich) byLine[r.linien_text].puenktlich++;
+          });
+          setLineStats(
+            Object.entries(byLine)
+              .filter(([, v]) => v.total >= 20)
+              .map(([linie, v]) => ({
+                linie,
+                puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10,
+                stopps: v.total,
+              }))
+              .sort((a, b) => b.puenktlichkeit - a.puenktlichkeit)
           );
         }
       } catch (e: unknown) {
@@ -224,10 +207,10 @@ export default function RhbDashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={dayStats}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                  <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} interval={6} />
                   <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
                   <Tooltip formatter={(v) => [`${v}%`, l.punctuality]} contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }} />
-                  <Line type="monotone" dataKey="puenktlichkeit" stroke="#0f172a" strokeWidth={2.5} dot={{ r: 2, fill: "#0f172a" }} />
+                  <Line type="monotone" dataKey="puenktlichkeit" stroke="#0f172a" strokeWidth={2} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
