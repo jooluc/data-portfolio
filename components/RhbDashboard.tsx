@@ -6,7 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   LineChart, Line, CartesianGrid,
 } from "recharts";
-import { Train, Clock, AlertCircle, TrendingUp } from "lucide-react";
+import { Train, Clock, AlertCircle, TrendingUp, ChevronLeft } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
@@ -25,44 +25,50 @@ interface DayStats  { tag: string; puenktlichkeit: number; }
 
 const txt = {
   en: {
-    loading:     "Loading RhB data...",
-    punctuality: "Punctuality",
-    punctSub:    "Departures <= 3 min delay",
-    median:      "Median Delay",
-    medianSub:   "Typical deviation",
-    stopps:      "Halt Stops",
-    stoppsSub:   "Evaluated stops",
-    maxDelay:    "Max. Delay",
-    maxDelaySub: "Largest deviation",
-    overTime:    "Punctuality over time",
-    overTimeSub: "Daily values in %",
-    byLine:      "Punctuality by line",
-    byLineSub:   "Lines with >= 20 stops only",
-    liveLabel:   "Live from Supabase",
-    lastUpdate:  "Latest data",
-    footer:      "Data updated daily via GitHub Actions",
-    repoLink:    "View Repo",
-    source:      "Data from opentransportdata.swiss",
+    loading:      "Loading RhB data...",
+    punctuality:  "Punctuality",
+    punctSub:     "Departures <= 3 min delay",
+    median:       "Median Delay",
+    medianSub:    "Typical deviation",
+    stopps:       "Halt Stops",
+    stoppsSub:    "Evaluated stops",
+    maxDelay:     "Max. Delay",
+    maxDelaySub:  "Largest deviation",
+    overTime:     "Punctuality over time",
+    overTimeSub:  "Click a month to drill down",
+    overTimeSub2: "Daily values in %",
+    byLine:       "Punctuality by line",
+    byLineSub:    "Lines with >= 20 stops only",
+    liveLabel:    "Live from Supabase",
+    lastUpdate:   "Latest data",
+    footer:       "Data updated daily via GitHub Actions",
+    repoLink:     "View Repo",
+    source:       "Data from opentransportdata.swiss",
+    backToYear:   "Back to year view",
+    monthView:    "Daily view",
   },
   de: {
-    loading:     "Lade RhB-Daten...",
-    punctuality: "Puenktlichkeit",
-    punctSub:    "Abfahrten <= 3 Min Verspaetung",
-    median:      "Median-Verspaetung",
-    medianSub:   "Typische Abweichung",
-    stopps:      "Haltestopps",
-    stoppsSub:   "Ausgewertete Stopps",
-    maxDelay:    "Max. Verspaetung",
-    maxDelaySub: "Groesste Abweichung",
-    overTime:    "Puenktlichkeit ueber Zeit",
-    overTimeSub: "Tageswerte in %",
-    byLine:      "Puenktlichkeit nach Linie",
-    byLineSub:   "Nur Linien mit >= 20 Stopps",
-    liveLabel:   "Live aus Supabase",
-    lastUpdate:  "Letzter Stand",
-    footer:      "Daten werden taeglich automatisch via GitHub Actions aktualisiert",
-    repoLink:    "Zum Repo",
-    source:      "Daten von opentransportdata.swiss",
+    loading:      "Lade RhB-Daten...",
+    punctuality:  "Puenktlichkeit",
+    punctSub:     "Abfahrten <= 3 Min Verspaetung",
+    median:       "Median-Verspaetung",
+    medianSub:    "Typische Abweichung",
+    stopps:       "Haltestopps",
+    stoppsSub:    "Ausgewertete Stopps",
+    maxDelay:     "Max. Verspaetung",
+    maxDelaySub:  "Groesste Abweichung",
+    overTime:     "Puenktlichkeit ueber Zeit",
+    overTimeSub:  "Monat anklicken fuer Details",
+    overTimeSub2: "Tageswerte in %",
+    byLine:       "Puenktlichkeit nach Linie",
+    byLineSub:    "Nur Linien mit >= 20 Stopps",
+    liveLabel:    "Live aus Supabase",
+    lastUpdate:   "Letzter Stand",
+    footer:       "Daten werden taeglich automatisch via GitHub Actions aktualisiert",
+    repoLink:     "Zum Repo",
+    source:       "Daten von opentransportdata.swiss",
+    backToYear:   "Zurueck zur Jahresansicht",
+    monthView:    "Tagesansicht",
   },
 };
 
@@ -70,18 +76,20 @@ export default function RhbDashboard() {
   const { lang } = useLanguage();
   const l = txt[lang];
 
-  const [kpis, setKpis]            = useState<KPIs | null>(null);
-  const [lineStats, setLineStats]   = useState<LineStats[]>([]);
-  const [dayStats, setDayStats]     = useState<DayStats[]>([]);
-  const [latestDate, setLatestDate] = useState<string>("");
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState<string | null>(null);
+  const [kpis, setKpis]               = useState<KPIs | null>(null);
+  const [lineStats, setLineStats]      = useState<LineStats[]>([]);
+  const [yearStats, setYearStats]      = useState<DayStats[]>([]);
+  const [monthStats, setMonthStats]    = useState<DayStats[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const [latestDate, setLatestDate]    = useState<string>("");
+  const [loading, setLoading]          = useState(true);
+  const [error, setError]              = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       const supabase = getSupabase();
       try {
-        // 1. KPIs via RPC (alle Daten)
+        // 1. KPIs
         const { data: kpiData, error: e1 } = await supabase.rpc("rhb_kpis");
         if (e1) throw new Error(e1.message);
         if (!kpiData || kpiData.length === 0) throw new Error("Keine KPI-Daten gefunden.");
@@ -94,20 +102,20 @@ export default function RhbDashboard() {
           maxVerspaetung:    Math.round(kpi.max_verspaetung * 10) / 10,
         });
 
-        // 2. Puenktlichkeit pro Tag via RPC (alle Tage)
-        const { data: dayData, error: e2 } = await supabase.rpc("rhb_puenktlichkeit_pro_tag");
-        if (!e2 && dayData) {
-          setDayStats(
-            (dayData as { betriebstag: string; puenktlichkeit: number }[])
+        // 2. Monatsübersicht (Jahresansicht)
+        const { data: monthData, error: e2 } = await supabase.rpc("rhb_puenktlichkeit_pro_monat");
+        if (!e2 && monthData) {
+          setYearStats(
+            (monthData as { monat: string; puenktlichkeit: number }[])
               .map((d) => ({
-                tag: d.betriebstag.slice(5),
+                tag: d.monat.slice(5), // MM
+                monat: d.monat,
                 puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
               }))
-              .sort((a, b) => a.tag.localeCompare(b.tag))
           );
         }
 
-        // 3. Puenktlichkeit nach Linie (letzte 5000 Zeilen)
+        // 3. Pünktlichkeit nach Linie
         const { data: raw, error: e3 } = await supabase
           .from("rhb_istdaten")
           .select("linien_text, puenktlich")
@@ -142,6 +150,27 @@ export default function RhbDashboard() {
     fetchData();
   }, []);
 
+  async function handleMonthClick(payload: { activePayload?: { payload: { monat?: string; tag: string } }[] }) {
+    if (!payload?.activePayload?.[0]) return;
+    const item = payload.activePayload[0].payload;
+    const monat = (item as { monat?: string }).monat;
+    if (!monat) return;
+
+    setSelectedMonth(monat);
+    const supabase = getSupabase();
+    const { data: dayData } = await supabase.rpc("rhb_puenktlichkeit_pro_tag");
+    if (dayData) {
+      const filtered = (dayData as { betriebstag: string; puenktlichkeit: number }[])
+        .filter((d) => d.betriebstag.startsWith(monat))
+        .map((d) => ({
+          tag: d.betriebstag.slice(8), // DD
+          puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
+        }))
+        .sort((a, b) => a.tag.localeCompare(b.tag));
+      setMonthStats(filtered);
+    }
+  }
+
   if (loading) return (
     <div className="flex h-64 items-center justify-center text-slate-500">
       <div className="flex items-center gap-3">
@@ -166,6 +195,10 @@ export default function RhbDashboard() {
     { icon: TrendingUp,  label: l.stopps,       value: kpis!.totalStopps.toLocaleString("de-CH"), sub: l.stoppsSub,   color: "text-slate-950" },
     { icon: AlertCircle, label: l.maxDelay,     value: `${kpis!.maxVerspaetung} Min`,              sub: l.maxDelaySub, color: "text-slate-950" },
   ];
+
+  const chartData  = selectedMonth ? monthStats : yearStats;
+  const chartLabel = selectedMonth ? `${l.monthView}: ${selectedMonth}` : l.overTime;
+  const chartSub   = selectedMonth ? l.overTimeSub2 : l.overTimeSub;
 
   return (
     <div className="space-y-8">
@@ -199,23 +232,43 @@ export default function RhbDashboard() {
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {dayStats.length > 1 && (
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <p className="mb-1 text-sm font-medium text-slate-700">{l.overTime}</p>
-            <p className="mb-5 text-xs text-slate-400">{l.overTimeSub}</p>
-            <div className="h-52">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={dayStats}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} interval={6} />
-                  <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
-                  <Tooltip formatter={(v) => [`${v}%`, l.punctuality]} contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }} />
-                  <Line type="monotone" dataKey="puenktlichkeit" stroke="#0f172a" strokeWidth={2} dot={false} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+        {/* Drill-down Chart */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-1 flex items-center justify-between">
+            <p className="text-sm font-medium text-slate-700">{chartLabel}</p>
+            {selectedMonth && (
+              <button
+                onClick={() => { setSelectedMonth(null); setMonthStats([]); }}
+                className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-950 transition"
+              >
+                <ChevronLeft className="h-3 w-3" />
+                {l.backToYear}
+              </button>
+            )}
           </div>
-        )}
+          <p className="mb-5 text-xs text-slate-400">{chartSub}</p>
+          <div className="h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={chartData}
+                onClick={!selectedMonth ? handleMonthClick : undefined}
+                style={!selectedMonth ? { cursor: "pointer" } : {}}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
+                <Tooltip
+                  formatter={(v) => [`${v}%`, l.punctuality]}
+                  labelFormatter={(label) => selectedMonth ? `${l.monthView.split(" ")[0]} ${label}` : `${l.overTime}: ${label}`}
+                  contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }}
+                />
+                <Line type="monotone" dataKey="puenktlichkeit" stroke="#0f172a" strokeWidth={2} dot={selectedMonth ? { r: 3, fill: "#0f172a" } : false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Pünktlichkeit nach Linie */}
         {lineStats.length > 0 && (
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="mb-1 text-sm font-medium text-slate-700">{l.byLine}</p>
