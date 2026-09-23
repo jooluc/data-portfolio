@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  LineChart, Line, CartesianGrid,
+  LineChart, Line, CartesianGrid, Cell,
 } from "recharts";
 import { Train, Clock, AlertCircle, TrendingUp, ChevronLeft } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
@@ -20,8 +20,9 @@ interface KPIs {
   maxVerspaetung: number;
 }
 
-interface LineStats { linie: string; puenktlichkeit: number; stopps: number; }
-interface DayStats  { tag: string; puenktlichkeit: number; monat?: string; }
+interface LineStats   { linie: string; puenktlichkeit: number; stopps: number; }
+interface MonthStats  { tag: string; monat: string; puenktlichkeit: number; }
+interface DayStats    { tag: string; puenktlichkeit: number; }
 
 const txt = {
   en: {
@@ -34,8 +35,9 @@ const txt = {
     stoppsSub:    "Evaluated stops",
     maxDelay:     "Max. Delay",
     maxDelaySub:  "Largest deviation",
-    overTime:     "Punctuality over time",
-    overTimeSub:  "Click a month to drill down",
+    overTime:     "Punctuality by month",
+    overTimeSub:  "Click a bar to see daily details",
+    monthView:    "Daily view",
     overTimeSub2: "Daily values in %",
     byLine:       "Punctuality by line",
     byLineSub:    "Lines with >= 20 stops only",
@@ -45,7 +47,6 @@ const txt = {
     repoLink:     "View Repo",
     source:       "Data from opentransportdata.swiss",
     backToYear:   "Back to year view",
-    monthView:    "Daily view",
   },
   de: {
     loading:      "Lade RhB-Daten...",
@@ -57,8 +58,9 @@ const txt = {
     stoppsSub:    "Ausgewertete Stopps",
     maxDelay:     "Max. Verspaetung",
     maxDelaySub:  "Groesste Abweichung",
-    overTime:     "Puenktlichkeit ueber Zeit",
-    overTimeSub:  "Monat anklicken fuer Details",
+    overTime:     "Puenktlichkeit nach Monat",
+    overTimeSub:  "Balken anklicken fuer Tagesdetails",
+    monthView:    "Tagesansicht",
     overTimeSub2: "Tageswerte in %",
     byLine:       "Puenktlichkeit nach Linie",
     byLineSub:    "Nur Linien mit >= 20 Stopps",
@@ -68,7 +70,6 @@ const txt = {
     repoLink:     "Zum Repo",
     source:       "Daten von opentransportdata.swiss",
     backToYear:   "Zurueck zur Jahresansicht",
-    monthView:    "Tagesansicht",
   },
 };
 
@@ -76,14 +77,14 @@ export default function RhbDashboard() {
   const { lang } = useLanguage();
   const l = txt[lang];
 
-  const [kpis, setKpis]               = useState<KPIs | null>(null);
-  const [lineStats, setLineStats]      = useState<LineStats[]>([]);
-  const [yearStats, setYearStats]      = useState<DayStats[]>([]);
-  const [monthStats, setMonthStats]    = useState<DayStats[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-  const [latestDate, setLatestDate]    = useState<string>("");
-  const [loading, setLoading]          = useState(true);
-  const [error, setError]              = useState<string | null>(null);
+  const [kpis, setKpis]                   = useState<KPIs | null>(null);
+  const [lineStats, setLineStats]          = useState<LineStats[]>([]);
+  const [yearStats, setYearStats]          = useState<MonthStats[]>([]);
+  const [monthStats, setMonthStats]        = useState<DayStats[]>([]);
+  const [selectedMonth, setSelectedMonth]  = useState<string | null>(null);
+  const [latestDate, setLatestDate]        = useState<string>("");
+  const [loading, setLoading]              = useState(true);
+  const [error, setError]                  = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -102,16 +103,15 @@ export default function RhbDashboard() {
           maxVerspaetung:    Math.round(kpi.max_verspaetung * 10) / 10,
         });
 
-        // 2. Monatsübersicht (Jahresansicht)
+        // 2. Monatsübersicht
         const { data: monthData, error: e2 } = await supabase.rpc("rhb_puenktlichkeit_pro_monat");
         if (!e2 && monthData) {
           setYearStats(
-            (monthData as { monat: string; puenktlichkeit: number }[])
-              .map((d) => ({
-                tag: d.monat.slice(5), // MM
-                monat: d.monat,
-                puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
-              }))
+            (monthData as { monat: string; puenktlichkeit: number }[]).map((d) => ({
+              tag:            d.monat.slice(5),
+              monat:          d.monat,
+              puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
+            }))
           );
         }
 
@@ -150,21 +150,16 @@ export default function RhbDashboard() {
     fetchData();
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function handleMonthClick(payload: any) {
-    if (!payload?.activePayload?.[0]) return;
-    const item = payload.activePayload[0].payload;
-    const monat = item.monat as string | undefined;
-    if (!monat) return;
-
-    setSelectedMonth(monat);
+  async function handleBarClick(data: MonthStats) {
+    if (!data?.monat) return;
+    setSelectedMonth(data.monat);
     const supabase = getSupabase();
     const { data: dayData } = await supabase.rpc("rhb_puenktlichkeit_pro_tag");
     if (dayData) {
       const filtered = (dayData as { betriebstag: string; puenktlichkeit: number }[])
-        .filter((d) => d.betriebstag.startsWith(monat))
+        .filter((d) => d.betriebstag.startsWith(data.monat))
         .map((d) => ({
-          tag: d.betriebstag.slice(8),
+          tag:            d.betriebstag.slice(8),
           puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
         }))
         .sort((a, b) => a.tag.localeCompare(b.tag));
@@ -196,10 +191,6 @@ export default function RhbDashboard() {
     { icon: TrendingUp,  label: l.stopps,       value: kpis!.totalStopps.toLocaleString("de-CH"), sub: l.stoppsSub,   color: "text-slate-950" },
     { icon: AlertCircle, label: l.maxDelay,     value: `${kpis!.maxVerspaetung} Min`,              sub: l.maxDelaySub, color: "text-slate-950" },
   ];
-
-  const chartData  = selectedMonth ? monthStats : yearStats;
-  const chartLabel = selectedMonth ? `${l.monthView}: ${selectedMonth}` : l.overTime;
-  const chartSub   = selectedMonth ? l.overTimeSub2 : l.overTimeSub;
 
   return (
     <div className="space-y-8">
@@ -233,10 +224,13 @@ export default function RhbDashboard() {
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Drill-down Chart */}
+
+        {/* Drill-down: Jahresansicht (Balken) oder Monatsansicht (Linie) */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="mb-1 flex items-center justify-between">
-            <p className="text-sm font-medium text-slate-700">{chartLabel}</p>
+            <p className="text-sm font-medium text-slate-700">
+              {selectedMonth ? `${l.monthView}: ${selectedMonth}` : l.overTime}
+            </p>
             {selectedMonth && (
               <button
                 onClick={() => { setSelectedMonth(null); setMonthStats([]); }}
@@ -247,24 +241,32 @@ export default function RhbDashboard() {
               </button>
             )}
           </div>
-          <p className="mb-5 text-xs text-slate-400">{chartSub}</p>
+          <p className="mb-5 text-xs text-slate-400">
+            {selectedMonth ? l.overTimeSub2 : l.overTimeSub}
+          </p>
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={chartData}
-                onClick={!selectedMonth ? handleMonthClick : undefined}
-                style={!selectedMonth ? { cursor: "pointer" } : {}}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
-                <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
-                <Tooltip
-                  formatter={(v) => [`${v}%`, l.punctuality]}
-                  labelFormatter={(label) => selectedMonth ? `${l.monthView.split(" ")[0]} ${label}` : `${l.overTime}: ${label}`}
-                  contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }}
-                />
-                <Line type="monotone" dataKey="puenktlichkeit" stroke="#0f172a" strokeWidth={2} dot={selectedMonth ? { r: 3, fill: "#0f172a" } : false} />
-              </LineChart>
+              {selectedMonth ? (
+                <LineChart data={monthStats}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                  <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
+                  <Tooltip formatter={(v) => [`${v}%`, l.punctuality]} contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }} />
+                  <Line type="monotone" dataKey="puenktlichkeit" stroke="#0f172a" strokeWidth={2} dot={{ r: 3, fill: "#0f172a" }} />
+                </LineChart>
+              ) : (
+                <BarChart data={yearStats} style={{ cursor: "pointer" }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
+                  <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
+                  <Tooltip formatter={(v) => [`${v}%`, l.punctuality]} contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }} />
+                  <Bar dataKey="puenktlichkeit" radius={[6, 6, 0, 0]} onClick={(data: MonthStats) => handleBarClick(data)}>
+                    {yearStats.map((entry, index) => (
+                      <Cell key={index} fill={entry.puenktlichkeit >= 90 ? "#10b981" : entry.puenktlichkeit >= 80 ? "#f59e0b" : "#ef4444"} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              )}
             </ResponsiveContainer>
           </div>
         </div>
