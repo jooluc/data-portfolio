@@ -260,7 +260,7 @@ export default function RhbDashboard() {
                   <XAxis dataKey="tag" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} />
                   <YAxis domain={[60, 100]} tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
                   <Tooltip formatter={(v) => [`${v}%`, l.punctuality]} contentStyle={{ borderRadius: "12px", border: "1px solid #e2e8f0", fontSize: "12px" }} />
-                  <Bar dataKey="puenktlichkeit" radius={[6, 6, 0, 0]} onClick={(data: MonthStats) => handleBarClick(data)}>
+                  <Bar dataKey="puenktlichkeit" radius={[6, 6, 0, 0]} onClick={(data) => handleBarClick(data as unknown as MonthStats)}>
                     {yearStats.map((entry, index) => (
                       <Cell key={index} fill={entry.puenktlichkeit >= 90 ? "#10b981" : entry.puenktlichkeit >= 80 ? "#f59e0b" : "#ef4444"} />
                     ))}
