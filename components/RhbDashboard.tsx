@@ -150,10 +150,11 @@ export default function RhbDashboard() {
     fetchData();
   }, []);
 
-  async function handleMonthClick(payload: { activePayload?: { payload: { monat?: string; tag: string } }[] }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function handleMonthClick(payload: any) {
     if (!payload?.activePayload?.[0]) return;
     const item = payload.activePayload[0].payload;
-    const monat = (item as { monat?: string }).monat;
+    const monat = item.monat as string | undefined;
     if (!monat) return;
 
     setSelectedMonth(monat);
@@ -163,7 +164,7 @@ export default function RhbDashboard() {
       const filtered = (dayData as { betriebstag: string; puenktlichkeit: number }[])
         .filter((d) => d.betriebstag.startsWith(monat))
         .map((d) => ({
-          tag: d.betriebstag.slice(8), // DD
+          tag: d.betriebstag.slice(8),
           puenktlichkeit: Math.round(d.puenktlichkeit * 10) / 10,
         }))
         .sort((a, b) => a.tag.localeCompare(b.tag));
