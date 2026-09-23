@@ -98,6 +98,10 @@ export default function RhbDashboard() {
             .order("betriebstag", { ascending: false })
             .range(from, from + pageSize - 1);
           if (error) throw error;
+                if (error) {
+      console.error("Supabase error:", JSON.stringify(error));
+      throw error;
+}
           if (!data || data.length === 0) break;
           allData = [...allData, ...data];
           if (data.length < pageSize) break;
