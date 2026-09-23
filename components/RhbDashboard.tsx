@@ -32,44 +32,44 @@ interface DayStats  { tag: string; puenktlichkeit: number; }
 
 const txt = {
   en: {
-    loading:      "Loading RhB data...",
-    punctuality:  "Punctuality",
-    punctSub:     "Departures ≤ 3 min delay",
-    median:       "Median Delay",
-    medianSub:    "Typical deviation",
-    stopps:       "Halt Stops",
-    stoppsSub:    "Evaluated stops",
-    maxDelay:     "Max. Delay",
-    maxDelaySub:  "Largest deviation",
-    overTime:     "Punctuality over time",
-    overTimeSub:  "Daily values in %",
-    byLine:       "Punctuality by line",
-    byLineSub:    "Lines with ≥ 20 stops only",
-    liveLabel:    "Live from Supabase",
-    lastUpdate:   "Latest data",
-    footer:       "Data updated daily via GitHub Actions ·",
-    repoLink:     "View Repo",
-    source:       "Data from opentransportdata.swiss",
+    loading:     "Loading RhB data...",
+    punctuality: "Punctuality",
+    punctSub:    "Departures <= 3 min delay",
+    median:      "Median Delay",
+    medianSub:   "Typical deviation",
+    stopps:      "Halt Stops",
+    stoppsSub:   "Evaluated stops",
+    maxDelay:    "Max. Delay",
+    maxDelaySub: "Largest deviation",
+    overTime:    "Punctuality over time",
+    overTimeSub: "Daily values in %",
+    byLine:      "Punctuality by line",
+    byLineSub:   "Lines with >= 20 stops only",
+    liveLabel:   "Live from Supabase",
+    lastUpdate:  "Latest data",
+    footer:      "Data updated daily via GitHub Actions",
+    repoLink:    "View Repo",
+    source:      "Data from opentransportdata.swiss",
   },
   de: {
-    loading:      "Lade RhB-Daten...",
-    punctuality:  "Pünktlichkeit",
-    punctSub:     "Abfahrten ≤ 3 Min Verspätung",
-    median:       "Median-Verspätung",
-    medianSub:    "Typische Abweichung",
-    stopps:       "Haltestopps",
-    stoppsSub:    "Ausgewertete Stopps",
-    maxDelay:     "Max. Verspätung",
-    maxDelaySub:  "Grösste Abweichung",
-    overTime:     "Pünktlichkeit über Zeit",
-    overTimeSub:  "Tageswerte in %",
-    byLine:       "Pünktlichkeit nach Linie",
-    byLineSub:    "Nur Linien mit ≥ 20 Stopps",
-    liveLabel:    "Live aus Supabase",
-    lastUpdate:   "Letzter Stand",
-    footer:       "Daten werden täglich automatisch via GitHub Actions aktualisiert ·",
-    repoLink:     "Zum Repo",
-    source:       "Daten von opentransportdata.swiss",
+    loading:     "Lade RhB-Daten...",
+    punctuality: "Puenktlichkeit",
+    punctSub:    "Abfahrten <= 3 Min Verspaetung",
+    median:      "Median-Verspaetung",
+    medianSub:   "Typische Abweichung",
+    stopps:      "Haltestopps",
+    stoppsSub:   "Ausgewertete Stopps",
+    maxDelay:    "Max. Verspaetung",
+    maxDelaySub: "Groesste Abweichung",
+    overTime:    "Puenktlichkeit ueber Zeit",
+    overTimeSub: "Tageswerte in %",
+    byLine:      "Puenktlichkeit nach Linie",
+    byLineSub:   "Nur Linien mit >= 20 Stopps",
+    liveLabel:   "Live aus Supabase",
+    lastUpdate:  "Letzter Stand",
+    footer:      "Daten werden taeglich automatisch via GitHub Actions aktualisiert",
+    repoLink:    "Zum Repo",
+    source:      "Daten von opentransportdata.swiss",
   },
 };
 
@@ -77,52 +77,43 @@ export default function RhbDashboard() {
   const { lang } = useLanguage();
   const l = txt[lang];
 
-  const [kpis, setKpis]           = useState<KPIs | null>(null);
-  const [lineStats, setLineStats]  = useState<LineStats[]>([]);
-  const [dayStats, setDayStats]    = useState<DayStats[]>([]);
+  const [kpis, setKpis]            = useState<KPIs | null>(null);
+  const [lineStats, setLineStats]   = useState<LineStats[]>([]);
+  const [dayStats, setDayStats]     = useState<DayStats[]>([]);
   const [latestDate, setLatestDate] = useState<string>("");
-  const [loading, setLoading]      = useState(true);
-  const [error, setError]          = useState<string | null>(null);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       const supabase = getSupabase();
       try {
-        let allData: RhbRow[] = [];
-        let from = 0;
-        const pageSize = 1000;
-        while (true) {
-          const { data, error } = await supabase
-            .from("rhb_istdaten")
-            .select("betriebstag, linien_text, abfahrt_verspaetung_min, puenktlich")
-            .order("betriebstag", { ascending: false })
-            .range(from, from + pageSize - 1);
-          if (error) throw error;
-                if (error) {
-      console.error("Supabase error:", JSON.stringify(error));
-      throw error;
-}
-          if (!data || data.length === 0) break;
-          allData = [...allData, ...data];
-          if (data.length < pageSize) break;
-          from += pageSize;
-        }
-        if (allData.length === 0) throw new Error("Keine Daten gefunden.");
-        const rows = allData;
+        const { data, error } = await supabase
+          .from("rhb_istdaten")
+          .select("betriebstag, linien_text, abfahrt_verspaetung_min, puenktlich")
+          .order("betriebstag", { ascending: false });
+
+        if (error) throw new Error(error.message);
+        if (!data || data.length === 0) throw new Error("Keine Daten gefunden.");
+
+        const rows = data as RhbRow[];
         setLatestDate(rows[0].betriebstag);
-        const withDelay     = rows.filter((r) => r.abfahrt_verspaetung_min !== null);
-        const delays        = withDelay.map((r) => r.abfahrt_verspaetung_min as number).sort((a, b) => a - b);
+
+        const withDelay      = rows.filter((r) => r.abfahrt_verspaetung_min !== null);
+        const delays         = withDelay.map((r) => r.abfahrt_verspaetung_min as number).sort((a, b) => a - b);
         const puenktlichRows = rows.filter((r) => r.puenktlich !== null);
         const puenktlichkeit = puenktlichRows.length > 0
           ? (puenktlichRows.filter((r) => r.puenktlich).length / puenktlichRows.length) * 100 : 0;
         const median = delays.length > 0 ? delays[Math.floor(delays.length / 2)] : 0;
         const max    = delays.length > 0 ? Math.max(...delays) : 0;
+
         setKpis({
-          puenktlichkeit:   Math.round(puenktlichkeit * 10) / 10,
+          puenktlichkeit:    Math.round(puenktlichkeit * 10) / 10,
           medianVerspaetung: Math.round(median * 10) / 10,
           totalStopps:       rows.length,
           maxVerspaetung:    Math.round(max * 10) / 10,
         });
+
         const byLine: Record<string, { total: number; puenktlich: number }> = {};
         rows.forEach((r) => {
           if (!r.linien_text) return;
@@ -133,9 +124,14 @@ export default function RhbDashboard() {
         setLineStats(
           Object.entries(byLine)
             .filter(([, v]) => v.total >= 20)
-            .map(([linie, v]) => ({ linie, puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10, stopps: v.total }))
+            .map(([linie, v]) => ({
+              linie,
+              puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10,
+              stopps: v.total,
+            }))
             .sort((a, b) => b.puenktlichkeit - a.puenktlichkeit)
         );
+
         const byDay: Record<string, { total: number; puenktlich: number }> = {};
         rows.forEach((r) => {
           if (!byDay[r.betriebstag]) byDay[r.betriebstag] = { total: 0, puenktlich: 0 };
@@ -144,11 +140,14 @@ export default function RhbDashboard() {
         });
         setDayStats(
           Object.entries(byDay)
-            .map(([tag, v]) => ({ tag: tag.slice(5), puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10 }))
+            .map(([tag, v]) => ({
+              tag: tag.slice(5),
+              puenktlichkeit: Math.round((v.puenktlich / v.total) * 1000) / 10,
+            }))
             .sort((a, b) => a.tag.localeCompare(b.tag))
         );
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "Error");
+        setError(e instanceof Error ? e.message : "Unbekannter Fehler");
       } finally {
         setLoading(false);
       }
@@ -175,10 +174,10 @@ export default function RhbDashboard() {
   );
 
   const kpiCards = [
-    { icon: Train,       label: l.punctuality, value: `${kpis!.puenktlichkeit}%`,                    sub: l.punctSub,   color: kpis!.puenktlichkeit >= 90 ? "text-green-600" : kpis!.puenktlichkeit >= 80 ? "text-amber-600" : "text-red-500" },
-    { icon: Clock,       label: l.median,       value: `${kpis!.medianVerspaetung} Min`,              sub: l.medianSub,  color: "text-slate-950" },
-    { icon: TrendingUp,  label: l.stopps,       value: kpis!.totalStopps.toLocaleString("de-CH"),    sub: l.stoppsSub,  color: "text-slate-950" },
-    { icon: AlertCircle, label: l.maxDelay,     value: `${kpis!.maxVerspaetung} Min`,                sub: l.maxDelaySub,color: "text-slate-950" },
+    { icon: Train,       label: l.punctuality, value: `${kpis!.puenktlichkeit}%`,                 sub: l.punctSub,    color: kpis!.puenktlichkeit >= 90 ? "text-green-600" : kpis!.puenktlichkeit >= 80 ? "text-amber-600" : "text-red-500" },
+    { icon: Clock,       label: l.median,       value: `${kpis!.medianVerspaetung} Min`,           sub: l.medianSub,   color: "text-slate-950" },
+    { icon: TrendingUp,  label: l.stopps,       value: kpis!.totalStopps.toLocaleString("de-CH"), sub: l.stoppsSub,   color: "text-slate-950" },
+    { icon: AlertCircle, label: l.maxDelay,     value: `${kpis!.maxVerspaetung} Min`,              sub: l.maxDelaySub, color: "text-slate-950" },
   ];
 
   return (
@@ -249,7 +248,7 @@ export default function RhbDashboard() {
       </div>
 
       <p className="text-center text-xs text-slate-400">
-        {l.footer}{" "}
+        {l.footer} ·{" "}
         <a href="https://github.com/jooluc/rhb-punctuality" target="_blank" className="underline hover:text-slate-600">{l.repoLink}</a>
       </p>
     </div>
