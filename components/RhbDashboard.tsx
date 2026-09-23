@@ -21,7 +21,7 @@ interface KPIs {
 }
 
 interface LineStats { linie: string; puenktlichkeit: number; stopps: number; }
-interface DayStats  { tag: string; puenktlichkeit: number; }
+interface DayStats  { tag: string; puenktlichkeit: number; monat?: string; }
 
 const txt = {
   en: {
